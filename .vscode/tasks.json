@@ -3,10 +3,24 @@
     "command": "dotnet",
     "isShellCommand": true,
     "args": [],
+    "options": {
+        "env": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+    },
     "tasks": [
         {
             "taskName": "build",
             "args": [
+                "${workspaceRoot}/WorldTripLog.csproj"
+            ],
+            "isBuildCommand": true,
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "taskName": "watch",
+            "args": [
+                "run",
                 "${workspaceRoot}/WorldTripLog.csproj"
             ],
             "isBuildCommand": true,
