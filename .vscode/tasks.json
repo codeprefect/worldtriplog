@@ -6,13 +6,14 @@
     "options": {
         "env": {
             "ASPNETCORE_ENVIRONMENT": "Development"
-        }
+        },
+        "cwd": "${workspaceRoot}/src/WorldTripLog"
     },
     "tasks": [
         {
             "taskName": "build",
             "args": [
-                "${workspaceRoot}/WorldTripLog.csproj"
+                "WorldTripLog.csproj"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"
