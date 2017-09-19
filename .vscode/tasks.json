@@ -20,8 +20,7 @@
         {
             "taskName": "watch",
             "args": [
-                "run",
-                "${workspaceRoot}/WorldTripLog.csproj"
+                "run"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"

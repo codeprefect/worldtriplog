@@ -16,7 +16,7 @@ namespace WorldTripLog
 {
     public class Startup
     {
-        public readonly IConfiguration _configuartion;
+        public IConfiguration _configuartion;
 
         public Startup(IConfiguration configuration)
         {
