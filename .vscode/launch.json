@@ -10,8 +10,8 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "cwd": "${workspaceRoot}/src/WorldTripLog",
-            "program": "${workspaceRoot}/src/WorldTripLog/bin/Debug/netcoreapp2.0/WorldTripLog.dll",
+            "cwd": "${workspaceRoot}/src/WorldTripLog.Web",
+            "program": "${workspaceRoot}/src/WorldTripLog.Web/bin/Debug/netcoreapp2.0/WorldTripLog.Web.dll",
             "args": [],
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
@@ -33,7 +33,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceRoot}/src/WorldTripLog/Views"
+                "/Views": "${workspaceRoot}/src/WorldTripLog.Web/Views"
             }
         },
         {

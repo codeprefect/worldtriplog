@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using WorldTripLog.Models;
-using WorldTripLog.Models.AccountViewModels;
+using WorldTripLog.Web.Models;
+using WorldTripLog.Web.Models.AccountViewModels;
 
-namespace WorldTripLog.Controllers
+namespace WorldTripLog.Web.Controllers
 {
     [Authorize]
     public class AccountController : Controller
