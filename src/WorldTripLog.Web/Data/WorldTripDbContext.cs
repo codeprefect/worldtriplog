@@ -1,9 +1,9 @@
 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using WorldTripLog.Models;
+using WorldTripLog.Web.Models;
 
-namespace WorldTripLog.Data
+namespace WorldTripLog.Web.Data
 {
     public class WorldTripDbContext : IdentityDbContext<WorldTripUser>
     {

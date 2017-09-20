@@ -1,7 +1,7 @@
 
 using Microsoft.AspNetCore.Identity;
 
-namespace WorldTripLog.Models
+namespace WorldTripLog.Web.Models
 {
     public class WorldTripUser : IdentityUser
     { }

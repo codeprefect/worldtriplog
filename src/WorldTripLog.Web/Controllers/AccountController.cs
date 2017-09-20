@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using WorldTripLog.Models;
-using WorldTripLog.Models.AccountViewModels;
+using WorldTripLog.Web.Models;
+using WorldTripLog.Web.Models.AccountViewModels;
 
-namespace WorldTripLog.Controllers
+namespace WorldTripLog.Web.Controllers
 {
     [Authorize]
     public class AccountController : Controller
@@ -32,7 +32,7 @@ namespace WorldTripLog.Controllers
         [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
         {
-            if (User.Identity.IsAuthenticated) return RedirectToLocal("/");
+            if (User.Identity.IsAuthenticated) return AlreadySignedIn(returnUrl);
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
@@ -69,7 +69,7 @@ namespace WorldTripLog.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
-            if (User.Identity.IsAuthenticated) return RedirectToLocal("/");
+            if (User.Identity.IsAuthenticated) return AlreadySignedIn(returnUrl);
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
@@ -144,6 +144,9 @@ namespace WorldTripLog.Controllers
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
         }
+
+        private IActionResult AlreadySignedIn(string returnUrl = null) =>
+            returnUrl == null ? RedirectToLocal("/") : RedirectToLocal(returnUrl);
 
         #endregion Helpers
     }

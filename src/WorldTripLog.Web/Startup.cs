@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using WorldTripLog.Data;
-using WorldTripLog.Models;
+using WorldTripLog.Web.Data;
+using WorldTripLog.Web.Models;
 
-namespace WorldTripLog
+namespace WorldTripLog.Web
 {
     public class Startup
     {

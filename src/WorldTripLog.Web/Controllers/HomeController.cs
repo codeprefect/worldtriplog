@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace WorldTripLog.Controllers
+namespace WorldTripLog.Web.Controllers
 {
     public class HomeController : Controller
     {
