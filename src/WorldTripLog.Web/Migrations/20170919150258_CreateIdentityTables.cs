@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
-namespace WorldTripLog.Migrations
+namespace WorldTripLog.Web.Migrations
 {
     public partial class CreateIdentityTables : Migration
     {

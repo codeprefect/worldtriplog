@@ -6,14 +6,15 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
-using WorldTripLog.Data;
+using WorldTripLog.Web.Data;
 
-namespace WorldTripLog.Migrations
+namespace WorldTripLog.Web.Migrations
 {
     [DbContext(typeof(WorldTripDbContext))]
-    partial class WorldTripDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170919150258_CreateIdentityTables")]
+    partial class CreateIdentityTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,7 +129,7 @@ namespace WorldTripLog.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("WorldTripLog.Models.WorldTripUser", b =>
+            modelBuilder.Entity("WorldTripLog.Web.Models.WorldTripUser", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
@@ -189,7 +190,7 @@ namespace WorldTripLog.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("WorldTripLog.Models.WorldTripUser")
+                    b.HasOne("WorldTripLog.Web.Models.WorldTripUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -197,7 +198,7 @@ namespace WorldTripLog.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("WorldTripLog.Models.WorldTripUser")
+                    b.HasOne("WorldTripLog.Web.Models.WorldTripUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -210,7 +211,7 @@ namespace WorldTripLog.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("WorldTripLog.Models.WorldTripUser")
+                    b.HasOne("WorldTripLog.Web.Models.WorldTripUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -218,7 +219,7 @@ namespace WorldTripLog.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("WorldTripLog.Models.WorldTripUser")
+                    b.HasOne("WorldTripLog.Web.Models.WorldTripUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
