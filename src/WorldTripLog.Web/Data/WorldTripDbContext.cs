@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using WorldTripLog.Models;
 using WorldTripLog.Web.Models;
 
 namespace WorldTripLog.Web.Data
@@ -11,6 +12,10 @@ namespace WorldTripLog.Web.Data
         {
 
         }
+
+        public DbSet<Trip> Trips { get; set; }
+
+        public DbSet<Stop> Stops { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
