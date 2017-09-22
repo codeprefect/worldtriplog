@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WorldTripLog.Web.DAL;
 using WorldTripLog.Web.Data;
 using WorldTripLog.Web.Models;
 
@@ -35,6 +36,8 @@ namespace WorldTripLog.Web
             services.AddIdentity<WorldTripUser, IdentityRole>()
                 .AddEntityFrameworkStores<WorldTripDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddScoped<IRepository, Repository<WorldTripDbContext>>();
 
             services.AddMvc();
         }
