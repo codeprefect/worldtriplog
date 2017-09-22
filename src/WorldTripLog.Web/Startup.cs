@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using WorldTripLog.Web.DAL;
 using WorldTripLog.Web.Data;
 using WorldTripLog.Web.Models;
+using WorldTripLog.Web.Services;
 
 namespace WorldTripLog.Web
 {
@@ -38,6 +39,7 @@ namespace WorldTripLog.Web
                 .AddDefaultTokenProviders();
 
             services.AddScoped<IRepository, Repository<WorldTripDbContext>>();
+            services.AddScoped(typeof(IDataService<>), typeof(DataService<>));
 
             services.AddMvc();
         }
