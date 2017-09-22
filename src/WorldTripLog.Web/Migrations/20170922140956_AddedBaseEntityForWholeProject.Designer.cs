@@ -11,9 +11,10 @@ using WorldTripLog.Web.Data;
 namespace WorldTripLog.Web.Migrations
 {
     [DbContext(typeof(WorldTripDbContext))]
-    partial class WorldTripDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170922140956_AddedBaseEntityForWholeProject")]
+    partial class AddedBaseEntityForWholeProject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
