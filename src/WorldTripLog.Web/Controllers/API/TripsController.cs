@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,7 @@ namespace WorldTripLog.Web.Controllers.Api
 {
     [Authorize]
     [Route("api/[controller]")]
-    public class TripsController : Controller
+    public class TripsController : BaseApiController
     {
         private readonly ILogger<TripsController> _logger;
 
@@ -44,6 +45,7 @@ namespace WorldTripLog.Web.Controllers.Api
         {
             try
             {
+                _logger.LogInformation(UserId);
                 return Ok(_data.GetById(id));
             }
             catch (Exception e)
@@ -54,16 +56,26 @@ namespace WorldTripLog.Web.Controllers.Api
         }
 
         [HttpPost]
-        public IActionResult Post(Trip trip)
+        public async Task<IActionResult> Post(Trip trip)
         {
-            try
+            if (ModelState.IsValid)
             {
-                _logger.LogInformation(User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault());
-                return null;
+                try
+                {
+                    trip.CreatedBy = UserId;
+                    trip.CreatedDate = DateTime.UtcNow;
+                    _data.Create(trip);
+                    await _data.SaveAsync();
+                    return Created("/api/trips", trip);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest($"trip creation failed due to: {e.Message}");
+                }
             }
-            catch (Exception e)
+            else
             {
-                return null;
+                return BadRequest(ModelState);
             }
         }
     }

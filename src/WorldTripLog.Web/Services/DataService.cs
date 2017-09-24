@@ -93,9 +93,9 @@ namespace WorldTripLog.Web.Services
         #endregion end of getters
 
         #region create, update, delete and save
-        public void Create(TEntity TEntity, string createdBy)
+        public void Create(TEntity entity, string createdBy)
         {
-            _repository.Create<TEntity>(TEntity, createdBy);
+            _repository.Create<TEntity>(entity, createdBy);
         }
 
         public void Delete(object id)
