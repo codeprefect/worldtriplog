@@ -9,11 +9,11 @@ using WorldTripLog.Web.Models;
 
 namespace WorldTripLog.Web.Services
 {
-    public class DataService<TEntity> : IDataService<TEntity> where TEntity : class, IEntity
+    public class DataService<TContext, TEntity> : IDataService<TContext, TEntity> where TEntity : class, IEntity
     {
-        private readonly IRepository _repository;
+        private readonly IRepository<TContext> _repository;
 
-        public DataService(IRepository repository)
+        public DataService(IRepository<TContext> repository)
         {
             _repository = repository;
         }

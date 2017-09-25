@@ -38,8 +38,8 @@ namespace WorldTripLog.Web
                 .AddEntityFrameworkStores<WorldTripDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddScoped<IRepository, Repository<WorldTripDbContext>>();
-            services.AddScoped(typeof(IDataService<>), typeof(DataService<>));
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IDataService<,>), typeof(DataService<,>));
 
             services.AddMvc();
         }

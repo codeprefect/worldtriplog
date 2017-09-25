@@ -7,7 +7,7 @@ using WorldTripLog.Web.DAL;
 
 namespace WorldTripLog.Web.Services
 {
-    public interface IDataService<TEntity>
+    public interface IDataService<TContext, TEntity>
     {
         #region all the getters first
         IEnumerable<TEntity> GetAll(

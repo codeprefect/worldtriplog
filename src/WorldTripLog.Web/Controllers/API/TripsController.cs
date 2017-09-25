@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WorldTripLog.Web.DAL;
+using WorldTripLog.Web.Data;
 using WorldTripLog.Web.Models;
 using WorldTripLog.Web.Services;
 
@@ -17,9 +18,9 @@ namespace WorldTripLog.Web.Controllers.Api
     {
         private readonly ILogger<TripsController> _logger;
 
-        public IDataService<Trip> _data { get; }
+        public IDataService<WorldTripDbContext, Trip> _data { get; }
 
-        public TripsController(ILogger<TripsController> logger, IDataService<Trip> data)
+        public TripsController(ILogger<TripsController> logger, IDataService<WorldTripDbContext, Trip> data)
         {
             _logger = logger;
             _data = data;

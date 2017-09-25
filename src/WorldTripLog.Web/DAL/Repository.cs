@@ -6,7 +6,7 @@ using WorldTripLog.Web.Helpers;
 
 namespace WorldTripLog.Web.DAL
 {
-    public class Repository<TContext> : ReadOnlyRepository<TContext>, IRepository where TContext : DbContext
+    public class Repository<TContext> : ReadOnlyRepository<TContext>, IRepository<TContext> where TContext : DbContext
     {
         public Repository(TContext context) : base(context)
         { }

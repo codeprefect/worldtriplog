@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace WorldTripLog.Web.DAL
 {
-    public interface IRepository : IReadOnlyRepository
+    public interface IRepository<TContext> : IReadOnlyRepository
     {
         void Create<TEntity>(TEntity entity, string createdBy = null)
             where TEntity : class, IEntity;
