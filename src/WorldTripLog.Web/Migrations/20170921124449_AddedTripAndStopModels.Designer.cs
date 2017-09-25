@@ -11,9 +11,10 @@ using WorldTripLog.Web.Data;
 namespace WorldTripLog.Web.Migrations
 {
     [DbContext(typeof(WorldTripDbContext))]
-    partial class WorldTripDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170921124449_AddedTripAndStopModels")]
+    partial class AddedTripAndStopModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,60 +129,40 @@ namespace WorldTripLog.Web.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("WorldTripLog.Web.Models.Stop", b =>
+            modelBuilder.Entity("WorldTripLog.Models.Stop", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("Arrival");
 
-                    b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreatedDate");
-
                     b.Property<double>("Latitude");
 
                     b.Property<double>("Longitude");
-
-                    b.Property<string>("ModifiedBy");
-
-                    b.Property<DateTime?>("ModifiedDate");
 
                     b.Property<string>("Name");
 
                     b.Property<int>("Order");
 
-                    b.Property<int>("TripID");
-
-                    b.Property<byte[]>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
+                    b.Property<int?>("TripId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TripID");
+                    b.HasIndex("TripId");
 
                     b.ToTable("Stops");
                 });
 
-            modelBuilder.Entity("WorldTripLog.Web.Models.Trip", b =>
+            modelBuilder.Entity("WorldTripLog.Models.Trip", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("ModifiedBy");
-
-                    b.Property<DateTime?>("ModifiedDate");
+                    b.Property<DateTime>("DateCreated");
 
                     b.Property<string>("Name");
 
-                    b.Property<byte[]>("Version")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
+                    b.Property<string>("UserName");
 
                     b.HasKey("Id");
 
@@ -284,12 +265,11 @@ namespace WorldTripLog.Web.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("WorldTripLog.Web.Models.Stop", b =>
+            modelBuilder.Entity("WorldTripLog.Models.Stop", b =>
                 {
-                    b.HasOne("WorldTripLog.Web.Models.Trip", "Trip")
+                    b.HasOne("WorldTripLog.Models.Trip")
                         .WithMany("Stops")
-                        .HasForeignKey("TripID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TripId");
                 });
 #pragma warning restore 612, 618
         }

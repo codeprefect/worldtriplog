@@ -11,9 +11,10 @@ using WorldTripLog.Web.Data;
 namespace WorldTripLog.Web.Migrations
 {
     [DbContext(typeof(WorldTripDbContext))]
-    partial class WorldTripDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170925104918_ChangesToTripAndStopModels")]
+    partial class ChangesToTripAndStopModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -151,7 +152,7 @@ namespace WorldTripLog.Web.Migrations
 
                     b.Property<int>("Order");
 
-                    b.Property<int>("TripID");
+                    b.Property<int?>("TripId");
 
                     b.Property<byte[]>("Version")
                         .IsConcurrencyToken()
@@ -159,7 +160,7 @@ namespace WorldTripLog.Web.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TripID");
+                    b.HasIndex("TripId");
 
                     b.ToTable("Stops");
                 });
@@ -286,10 +287,9 @@ namespace WorldTripLog.Web.Migrations
 
             modelBuilder.Entity("WorldTripLog.Web.Models.Stop", b =>
                 {
-                    b.HasOne("WorldTripLog.Web.Models.Trip", "Trip")
+                    b.HasOne("WorldTripLog.Web.Models.Trip")
                         .WithMany("Stops")
-                        .HasForeignKey("TripID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TripId");
                 });
 #pragma warning restore 612, 618
         }
