@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -12,17 +13,17 @@ using WorldTripLog.Web.Services;
 namespace WorldTripLog.Web.Controllers.Api
 {
     //[Authorize]
-    [Route("api/[controller]")]
-    public class TripsController : BaseApiController
+    [Route("api/trips/{tripID}/[controller]")]
+    public class StopsController : BaseApiController
     {
-        private readonly ILogger<TripsController> _logger;
+        private readonly ILogger<StopsController> _logger;
 
-        public IDataService<WorldTripDbContext, Trip> _trips { get; }
+        public IDataService<WorldTripDbContext, Stop> _stops { get; }
 
-        public TripsController(ILogger<TripsController> logger, IDataService<WorldTripDbContext, Trip> trips)
+        public StopsController(ILogger<StopsController> logger, IDataService<WorldTripDbContext, Stop> stops)
         {
             _logger = logger;
-            _trips = trips;
+            _stops = stops;
         }
 
         [HttpGet]
@@ -30,16 +31,16 @@ namespace WorldTripLog.Web.Controllers.Api
         {
             try
             {
-                var trips = await _trips.GetAsync(filter: (t) => t.CreatedBy == UserID);
-                return trips.Any() ? Ok(trips) : throw new InvalidOperationException();
+                var stops = await _stops.GetAsync(filter: Filter);
+                return stops.Any() ? Ok(stops) : throw new InvalidOperationException();
             }
             catch (Exception)
             {
                 _logger.LogError("failed to execute GET");
                 return BadRequest(new ErrorMessage
                 {
-                    message = "failed to get trips",
-                    reason = "probably no trips yet."
+                    message = "failed to get stops",
+                    reason = "probably no stops yet."
                 });
             }
         }
@@ -49,12 +50,14 @@ namespace WorldTripLog.Web.Controllers.Api
         {
             try
             {
-                var trip = await _trips.GetOneAsync(filter: (t) => t.CreatedBy == UserID && t.Id == id);
-                return trip != null ? Ok(trip) : throw new InvalidOperationException();
+                Expression<Func<Stop, bool>> filterOne = (s) => s.TripID == TripID && s.CreatedBy == UserID && s.Id == id;
+
+                var stop = await _stops.GetOneAsync(filter: filterOne);
+                return stop != null ? Ok(stop) : throw new InvalidOperationException();
             }
             catch (Exception e)
             {
-                _logger.LogError("Trip with the specified id does not exist: {0}", e.Message);
+                _logger.LogError("stop with the specified id does not exist: {0}", e.Message);
                 return BadRequest(new ErrorMessage
                 {
                     message = "requested resource does not exist",
@@ -64,19 +67,20 @@ namespace WorldTripLog.Web.Controllers.Api
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]Trip trip)
+        public async Task<IActionResult> Post([FromBody]Stop stop)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _trips.Create(trip, UserID);
-                    await _trips.SaveAsync();
-                    return Created("/api/trips", trip);
+                    stop.TripID = TripID;
+                    _stops.Create(stop, UserID);
+                    await _stops.SaveAsync();
+                    return Created($"/api/trips/{TripID}/stops", stop);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest($"trip creation failed due to: {e.Message}");
+                    return BadRequest($"stop creation failed due to: {e.Message}");
                 }
             }
             else
@@ -86,19 +90,19 @@ namespace WorldTripLog.Web.Controllers.Api
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put([FromBody]Trip trip)
+        public async Task<IActionResult> Put([FromBody]Stop Stop)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _trips.Update(trip, UserID);
-                    await _trips.SaveAsync();
-                    return Created($"/api/trips/{trip.Id}", trip);
+                    _stops.Update(Stop, UserID);
+                    await _stops.SaveAsync();
+                    return Created($"/api/trips/{TripID}/stops/{Stop.Id}", Stop);
                 }
                 catch (Exception e)
                 {
-                    return BadRequest($"trip update failed due to: {e.Message}");
+                    return BadRequest($"stop update failed due to: {e.Message}");
                 }
             }
             else
@@ -114,13 +118,13 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 try
                 {
-                    _trips.Delete(id);
-                    await _trips.SaveAsync();
+                    _stops.Delete(id);
+                    await _stops.SaveAsync();
                     return Ok($"Deleted Successfully");
                 }
                 catch (Exception e)
                 {
-                    return BadRequest($"trip update failed due to: {e.Message}");
+                    return BadRequest($"Stop update failed due to: {e.Message}");
                 }
             }
             else
@@ -128,5 +132,18 @@ namespace WorldTripLog.Web.Controllers.Api
                 return BadRequest(ModelState);
             }
         }
+
+        #region helpers
+        private int TripID
+        {
+            get => Convert.ToInt32(RouteData.Values["tripID"]);
+        }
+
+        private Expression<Func<Stop, bool>> Filter
+        {
+            get => (s) => s.TripID == TripID && s.CreatedBy == UserID;
+        }
+
+        #endregion
     }
 }
