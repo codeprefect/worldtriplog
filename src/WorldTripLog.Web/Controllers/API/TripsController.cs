@@ -27,32 +27,41 @@ namespace WorldTripLog.Web.Controllers.Api
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> GetAllAsync()
         {
             try
             {
-                return Ok(_data.GetAll());
+                var trips = await _data.GetAllAsync();
+                return trips.Any() ? Ok(trips) : throw new InvalidOperationException();
             }
             catch (Exception)
             {
                 _logger.LogError("Failed to execute GET");
-                return BadRequest();
+                return BadRequest(new ErrorMessage
+                {
+                    message = "Failed to get trips",
+                    reason = "probably no trips yet."
+                });
             }
         }
 
-        [HttpGet]
-        [Route("{id}")]
-        public IActionResult GetById(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
             try
             {
                 _logger.LogInformation(UserId);
-                return Ok(_data.GetById(id));
+                var trip = await _data.GetByIdAsync(id);
+                return trip != null ? Ok(trip) : throw new InvalidOperationException();
             }
             catch (Exception e)
             {
                 _logger.LogError("Trip with the specified id does not exist: {0}", e.Message);
-                return BadRequest();
+                return BadRequest(new ErrorMessage
+                {
+                    message = "requested resource does not exist",
+                    reason = $"given id {id} is invalid"
+                });
             }
         }
 
@@ -63,9 +72,8 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 try
                 {
-                    trip.CreatedBy = UserId;
                     trip.CreatedDate = DateTime.UtcNow;
-                    _data.Create(trip);
+                    _data.Create(trip, UserId);
                     await _data.SaveAsync();
                     return Created("/api/trips", trip);
                 }
