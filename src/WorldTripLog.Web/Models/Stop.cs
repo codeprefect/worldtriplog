@@ -9,5 +9,7 @@ namespace WorldTripLog.Web.Models
         public double Longitude { get; set; }
         public DateTime Arrival { get; set; }
         public int Order { get; set; }
+        public int TripID { get; set; }
+        public Trip Trip { get; set; }
     }
 }

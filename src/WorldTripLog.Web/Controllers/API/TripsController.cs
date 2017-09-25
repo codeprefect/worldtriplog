@@ -12,7 +12,7 @@ using WorldTripLog.Web.Services;
 
 namespace WorldTripLog.Web.Controllers.Api
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     public class TripsController : BaseApiController
     {
@@ -66,7 +66,7 @@ namespace WorldTripLog.Web.Controllers.Api
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Trip trip)
+        public async Task<IActionResult> Post([FromBody]Trip trip)
         {
             if (ModelState.IsValid)
             {
@@ -80,6 +80,29 @@ namespace WorldTripLog.Web.Controllers.Api
                 catch (Exception e)
                 {
                     return BadRequest($"trip creation failed due to: {e.Message}");
+                }
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put([FromBody]Trip trip)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    trip.ModifiedDate = DateTime.UtcNow;
+                    _data.Update(trip, UserId);
+                    await _data.SaveAsync();
+                    return Created($"/api/trips/{trip.Id}", trip);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest($"trip update failed due to: {e.Message}");
                 }
             }
             else
