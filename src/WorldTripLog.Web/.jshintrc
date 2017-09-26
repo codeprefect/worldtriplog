@@ -1,0 +1,9 @@
+{
+  "validthis": true, // Tolerate using this in a non-constructor
+  "curly": true,
+  "eqeqeq": true,
+  "esversion": 6,
+  "plusplus": true,
+  "strict": true,
+  "varstmt": true
+}

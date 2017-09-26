@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WorldTripLog.Web.Data;
+using WorldTripLog.Web.Helpers;
 using WorldTripLog.Web.Models;
+using WorldTripLog.Web.Models.ViewModels;
 using WorldTripLog.Web.Services;
 
 namespace WorldTripLog.Web.Controllers.Api
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/trips/{tripID}/[controller]")]
     public class StopsController : BaseApiController
     {
@@ -32,7 +34,7 @@ namespace WorldTripLog.Web.Controllers.Api
             try
             {
                 var stops = await _stops.GetAsync(filter: Filter);
-                return stops.Any() ? Ok(stops) : throw new InvalidOperationException();
+                return stops.Any() ? Ok(stops.ToVModel()) : throw new InvalidOperationException();
             }
             catch (Exception)
             {
@@ -53,7 +55,7 @@ namespace WorldTripLog.Web.Controllers.Api
                 Expression<Func<Stop, bool>> filterOne = (s) => s.TripID == TripID && s.CreatedBy == UserID && s.Id == id;
 
                 var stop = await _stops.GetOneAsync(filter: filterOne);
-                return stop != null ? Ok(stop) : throw new InvalidOperationException();
+                return stop != null ? Ok(stop.ToVModel()) : throw new InvalidOperationException();
             }
             catch (Exception e)
             {
@@ -67,14 +69,15 @@ namespace WorldTripLog.Web.Controllers.Api
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]Stop stop)
+        public async Task<IActionResult> Post([FromBody]StopVModel stop)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    stop.TripID = TripID;
-                    _stops.Create(stop, UserID);
+                    var _stop = stop.ToModel();
+                    _stop.TripID = TripID;
+                    _stops.Create(_stop, UserID);
                     await _stops.SaveAsync();
                     return Created($"/api/trips/{TripID}/stops", stop);
                 }
@@ -90,15 +93,15 @@ namespace WorldTripLog.Web.Controllers.Api
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put([FromBody]Stop Stop)
+        public async Task<IActionResult> Put([FromBody]StopVModel stop)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _stops.Update(Stop, UserID);
+                    _stops.Update(stop.ToModel(), UserID);
                     await _stops.SaveAsync();
-                    return Created($"/api/trips/{TripID}/stops/{Stop.Id}", Stop);
+                    return Created($"/api/trips/{TripID}/stops/{stop.Id}", stop);
                 }
                 catch (Exception e)
                 {

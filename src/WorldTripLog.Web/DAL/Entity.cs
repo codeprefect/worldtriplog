@@ -36,5 +36,7 @@ namespace WorldTripLog.Web.DAL
 
         [Timestamp]
         public byte[] Version { get; set; }
+
+        public bool Deleted { get; set; }
     }
 }

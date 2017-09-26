@@ -1,17 +1,21 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WorldTripLog.Web.Data;
+using WorldTripLog.Web.Helpers;
 using WorldTripLog.Web.Models;
+using WorldTripLog.Web.Models.ViewModels;
 using WorldTripLog.Web.Services;
 
 namespace WorldTripLog.Web.Controllers.Api
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     public class TripsController : BaseApiController
     {
@@ -30,8 +34,9 @@ namespace WorldTripLog.Web.Controllers.Api
         {
             try
             {
-                var trips = await _trips.GetAsync(filter: (t) => t.CreatedBy == UserID);
-                return trips.Any() ? Ok(trips) : throw new InvalidOperationException();
+                Expression<Func<Trip, bool>> filter = t => t.CreatedBy == UserID;
+                var trips = await _trips.GetAsync(filter: filter);
+                return trips.Any() ? Ok(trips.ToVModel()) : throw new InvalidOperationException();
             }
             catch (Exception)
             {
@@ -49,8 +54,9 @@ namespace WorldTripLog.Web.Controllers.Api
         {
             try
             {
-                var trip = await _trips.GetOneAsync(filter: (t) => t.CreatedBy == UserID && t.Id == id);
-                return trip != null ? Ok(trip) : throw new InvalidOperationException();
+                Expression<Func<Trip, bool>> filter = t => t.CreatedBy == UserID && t.Id == id;
+                var trip = await _trips.GetOneAsync(filter: filter);
+                return trip != null ? Ok(trip.ToVModel()) : throw new InvalidOperationException();
             }
             catch (Exception e)
             {
@@ -64,13 +70,13 @@ namespace WorldTripLog.Web.Controllers.Api
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]Trip trip)
+        public async Task<IActionResult> Post([FromBody]TripVModel trip)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _trips.Create(trip, UserID);
+                    _trips.Create(trip.ToModel(), UserID);
                     await _trips.SaveAsync();
                     return Created("/api/trips", trip);
                 }
@@ -86,13 +92,13 @@ namespace WorldTripLog.Web.Controllers.Api
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put([FromBody]Trip trip)
+        public async Task<IActionResult> Put([FromBody]TripVModel trip)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _trips.Update(trip, UserID);
+                    _trips.Update(trip.ToModel(), UserID);
                     await _trips.SaveAsync();
                     return Created($"/api/trips/{trip.Id}", trip);
                 }
@@ -120,7 +126,7 @@ namespace WorldTripLog.Web.Controllers.Api
                 }
                 catch (Exception e)
                 {
-                    return BadRequest($"trip update failed due to: {e.Message}");
+                    return BadRequest($"trip deletion failed due to: {e.Message}");
                 }
             }
             else

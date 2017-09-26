@@ -16,6 +16,7 @@ namespace WorldTripLog.Web.DAL
         string CreatedBy { get; set; }
         string ModifiedBy { get; set; }
         byte[] Version { get; set; }
+        bool Deleted { get; set; }
     }
 
     public interface IEntity<T> : IEntity

@@ -1,0 +1,39 @@
+<div>
+  <div>
+    <a href="#/" class="btn btn-sm btn-default"><i class="fa fa-angle-left"></i>&nbsp;Back</a>
+  </div>
+  <div class="col-md-3">
+    <h2>{{vm.tripName}}</h2>
+    <div class="alert alert-danger" ng-show="vm.errorMessage">{{vm.errorMessage}}</div>
+    <table ng-show="vm.stops" class="table table-responsive table-striped">
+      <thead>
+        <tr>
+          <th>Location</th>
+          <th>Arrival</th>
+        </tr>
+      </thead>
+      <tr ng-repeat="stop in vm.stops">
+        <td>{{stop.name}}</td>
+        <td>{{stop.arrival | date: 'MM-dd-yyyy'}}</td>
+      </tr>
+    </table>
+
+    <form novalidate name="newStopForm" ng-submit="vm.addStop()">
+      <div>
+        <label>Date</label>
+        <input class="form-control" type="date" id="arrival" name="arrival" ng-model="vm.newStop.arrival" required />
+        <span class="text-danger" ng-show="newStopForm.arrival.$error.required">Required</span>
+      </div>
+      <div>
+        <label>location</label>
+        <input class="form-control" id="name" name="name" ng-model="vm.newStop.name" required ng-minlength="5">
+        <span class="text-danger" ng-show="newStopForm.name.$error.required">Required</span>
+      </div>
+      <input type="submit" value="Add" class="btn btn-success" ng-disabled="newStopForm.$invalid">
+    </form>
+  </div>
+  <div class="col-md-6 col-xs-4">
+    <h2>The Map</h2>
+    <div id="map"></div>
+  </div>
+</div>
