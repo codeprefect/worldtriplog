@@ -120,7 +120,7 @@ namespace WorldTripLog.Web.Controllers.Api
                 }
                 catch (Exception e)
                 {
-                    return BadRequest($"trip update failed due to: {e.Message}");
+                    return BadRequest($"trip deletion failed due to: {e.Message}");
                 }
             }
             else
