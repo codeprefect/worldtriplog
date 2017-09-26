@@ -35,11 +35,12 @@ namespace WorldTripLog.Web.DAL
         public virtual void Delete<TEntity>(TEntity entity) where TEntity : class, IEntity
         {
             var dbSet = _context.Set<TEntity>();
-            if (_context.Entry(entity).State == EntityState.Detached)
+            entity.Deleted = !entity.Deleted;
+            if (_context.Entry(entity).State == EntityState.Modified)
             {
                 dbSet.Attach(entity);
             }
-            dbSet.Remove(entity);
+            _context.Entry(entity).State = EntityState.Detached;
         }
 
         public virtual void Save()
