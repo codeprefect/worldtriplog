@@ -15,7 +15,7 @@ using WorldTripLog.Web.Services;
 
 namespace WorldTripLog.Web.Controllers.Api
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     public class TripsController : BaseApiController
     {

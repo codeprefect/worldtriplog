@@ -20,5 +20,23 @@
     },
     // Optionally generate .map file
     "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/js/vendor.min.js",
+    "inputFiles": [
+      "wwwroot/lib/underscore/underscore-min.js",
+      "wwwroot/lib/angular/angular.js",
+      "wwwroot/lib/angular-route/angular-route.js",
+      "wwwroot/lib/gmaps/gmaps.min.js",
+      "wwwroot/lib/travelmap/travelmap.min.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/app.min.js",
+    "inputFiles": [
+      "wwwroot/js/app-trips.js",
+      "wwwroot/js/trips.controller.js",
+      "wwwroot/js/tripEditor.controller.js"
+    ]
   }
 ]

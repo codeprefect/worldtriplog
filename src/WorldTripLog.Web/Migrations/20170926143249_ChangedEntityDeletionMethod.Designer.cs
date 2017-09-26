@@ -11,7 +11,7 @@ using WorldTripLog.Web.Data;
 namespace WorldTripLog.Web.Migrations
 {
     [DbContext(typeof(WorldTripDbContext))]
-    [Migration("20170926104459_ChangedEntityDeletionMethod")]
+    [Migration("20170926143249_ChangedEntityDeletionMethod")]
     partial class ChangedEntityDeletionMethod
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
