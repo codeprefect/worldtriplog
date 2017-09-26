@@ -22,10 +22,13 @@ namespace WorldTripLog.Web.Controllers.Api
 
         public IDataService<WorldTripDbContext, Stop> _stops { get; }
 
-        public StopsController(ILogger<StopsController> logger, IDataService<WorldTripDbContext, Stop> stops)
+        private readonly GeoCoordsService _coordService;
+
+        public StopsController(ILogger<StopsController> logger, IDataService<WorldTripDbContext, Stop> stops, GeoCoordsService coordService)
         {
             _logger = logger;
             _stops = stops;
+            _coordService = coordService;
         }
 
         [HttpGet]
@@ -33,7 +36,9 @@ namespace WorldTripLog.Web.Controllers.Api
         {
             try
             {
-                var stops = await _stops.GetAsync(filter: Filter);
+                Expression<Func<Stop, bool>> filter = s => s.TripID == TripID && s.CreatedBy == UserID;
+
+                var stops = await _stops.GetAsync(filter: filter);
                 return stops.Any() ? Ok(stops.ToVModel()) : throw new InvalidOperationException();
             }
             catch (Exception)
@@ -75,7 +80,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 try
                 {
-                    var _stop = stop.ToModel();
+                    var _stop = await _coordService.AddGeoCoords(stop.ToModel());
                     _stop.TripID = TripID;
                     _stops.Create(_stop, UserID);
                     await _stops.SaveAsync();
@@ -140,11 +145,6 @@ namespace WorldTripLog.Web.Controllers.Api
         private int TripID
         {
             get => Convert.ToInt32(RouteData.Values["tripID"]);
-        }
-
-        private Expression<Func<Stop, bool>> Filter
-        {
-            get => (s) => s.TripID == TripID && s.CreatedBy == UserID;
         }
 
         #endregion

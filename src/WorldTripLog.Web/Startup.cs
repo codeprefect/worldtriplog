@@ -40,6 +40,7 @@ namespace WorldTripLog.Web
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IDataService<,>), typeof(DataService<,>));
+            services.AddTransient<GeoCoordsService>();
 
             services.AddMvc();
         }

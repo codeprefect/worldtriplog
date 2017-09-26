@@ -309,3 +309,5 @@ OpenCover/
 
 *wwwroot/lib
 *.Development.*
+*.min.*
+
