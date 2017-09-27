@@ -7,34 +7,39 @@
 
   function tripsController($http) {
     let vm = this;
+    activate();
 
-    vm.loading = true;
+    function activate() {
+      vm.loading = true;
+      vm.trips = [];
+      vm.newTrip = {};
+      getTrips();
+    }
 
-    vm.trips = [];
+    vm.addTrip = addTrip;
 
-    $http.get("/api/trips")
-      .then(function (response) {
-        angular.copy(response.data, vm.trips);
-      }, function (err) {
-        vm.errorMessage = "Failed to load trips";
-      })
-      .finally(function () {
-        vm.loading = false;
-        console.log(response);
-      });
+    function getTrips() {
+      $http.get("/api/trips")
+        .then(function (response) {
+          angular.copy(response.data, vm.trips);
+        }, function (err) {
+          vm.errorMessage = `${err.data.message} (${err.data.reason})`;
+        })
+        .finally(function () {
+          vm.loading = false;
+        });
+    }
 
-    vm.newTrip = {};
-
-    vm.addTrip = function () {
+    function addTrip() {
       $http.post("/api/trips", vm.newTrip)
         .then(function (response) {
           vm.trips.push(vm.newTrip);
         }, function (err) {
-          vm.errorMessage = "Failed to post new trip";
+          vm.errorMessage = `${err.data.message} (${err.data.reason})`;
         })
         .finally(function () {
           vm.newTrip = {};
         });
-    };
+    }
   }
 })();
