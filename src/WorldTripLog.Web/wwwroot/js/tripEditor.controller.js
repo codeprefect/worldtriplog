@@ -4,6 +4,8 @@
   angular.module("app-trips")
     .controller("tripEditorController", tripEditorController);
 
+  tripEditorController.$inject = ['$routeParams', '$http'];
+
   function tripEditorController($routeParams, $http) {
     let vm = this;
     activate();
