@@ -84,7 +84,7 @@ namespace WorldTripLog.Web.Controllers.Api
                     _stop.TripID = TripID;
                     _stops.Create(_stop, UserID);
                     await _stops.SaveAsync();
-                    return Created($"/api/trips/{TripID}/stops", stop);
+                    return Created($"/api/trips/{TripID}/stops", _stop.ToVModel());
                 }
                 catch (Exception e)
                 {
