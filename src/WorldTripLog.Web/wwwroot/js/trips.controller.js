@@ -5,6 +5,8 @@
   angular.module("app-trips")
     .controller("tripsController", tripsController);
 
+  tripsController.$inject = ['$http'];
+
   function tripsController($http) {
     let vm = this;
     activate();
