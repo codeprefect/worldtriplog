@@ -53,7 +53,6 @@
   }
 
   function _showMap(stops) {
-    console.log(stops);
     if (stops && stops.length > 0) {
       let mapStops = _.map(stops, function (item) {
         return {
