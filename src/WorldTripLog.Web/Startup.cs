@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.PlatformAbstractions;
 using Swashbuckle.AspNetCore.Swagger;
 using WorldTripLog.Web.DAL;
 using WorldTripLog.Web.Data;
@@ -45,7 +47,13 @@ namespace WorldTripLog.Web
 
             services.AddMvc();
 
-            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Info { Title = "WorldTripLog API", Version = "v1" }));
+            services.AddSwaggerGen(config =>
+            {
+                config.SwaggerDoc("v1", new Info { Title = "WorldTripLog API", Version = "v1" });
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var xmlPath = Path.Combine(basePath, "WorldTripLogApi.xml");
+                config.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
