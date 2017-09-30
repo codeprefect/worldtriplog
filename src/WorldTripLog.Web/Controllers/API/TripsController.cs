@@ -160,7 +160,7 @@ namespace WorldTripLog.Web.Controllers.Api
         /// <response code="200">
         /// returns the just updated trip</response>
         /// <response code="400">
-        /// when the request body is invalid or some other errors
+        /// when the request body is invalid
         /// </response>
         /// <response code="500">
         /// internal server error(s)

@@ -1,7 +1,7 @@
 {
-    "version": "0.1.0",
+    "version": "2.0.0",
     "command": "dotnet",
-    "isShellCommand": true,
+    "type": "shell",
     "args": [],
     "options": {
         "env": {
@@ -15,7 +15,10 @@
             "args": [
                 "WorldTripLog.Web.csproj"
             ],
-            "isBuildCommand": true,
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "problemMatcher": "$msCompile"
         },
         {
@@ -23,7 +26,7 @@
             "args": [
                 "run"
             ],
-            "isBuildCommand": true,
+            "group": "test",
             "problemMatcher": "$msCompile"
         }
     ]
