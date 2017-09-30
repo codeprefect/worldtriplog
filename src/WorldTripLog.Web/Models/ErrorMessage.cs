@@ -1,6 +1,9 @@
 
-public class ErrorMessage
+namespace WorldTripLog.Web.Models
 {
-    public string message { get; set; } = "some unexpected error occured";
-    public string reason { get; set; }
+    public class ErrorMessage
+    {
+        public string message { get; set; } = "some unexpected error occured";
+        public string reason { get; set; }
+    }
 }
