@@ -41,6 +41,30 @@ namespace WorldTripLog.Web
                 .AddEntityFrameworkStores<WorldTripDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.Name = "AuthCookie";
+                options.Cookie.Domain = "localhost";
+                options.Cookie.Path = "/";
+                options.Cookie.HttpOnly = false;
+                options.Cookie.SameSite = SameSiteMode.Lax;
+                //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.SlidingExpiration = true;
+                options.Events.OnRedirectToLogin = async ctx =>
+                {
+                    if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
+                    {
+                        ctx.Response.StatusCode = 401;
+                        //ctx.Response. = new Stream("Unathenticated request");
+                    }
+                    else
+                    {
+                        ctx.Response.Redirect(ctx.RedirectUri);
+                    }
+                    await Task.Yield();
+                };
+            });
+
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IDataService<,>), typeof(DataService<,>));
             services.AddTransient<GeoCoordsService>();

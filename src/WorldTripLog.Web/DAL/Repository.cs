@@ -35,7 +35,7 @@ namespace WorldTripLog.Web.DAL
         public virtual void Delete<TEntity>(TEntity entity) where TEntity : class, IEntity
         {
             var dbSet = _context.Set<TEntity>();
-            entity.Deleted = !entity.Deleted;
+            entity.Deleted = DateTime.UtcNow;
             if (_context.Entry(entity).State == EntityState.Modified)
             {
                 dbSet.Attach(entity);
