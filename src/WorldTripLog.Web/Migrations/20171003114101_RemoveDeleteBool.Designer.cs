@@ -11,9 +11,10 @@ using WorldTripLog.Web.Data;
 namespace WorldTripLog.Web.Migrations
 {
     [DbContext(typeof(WorldTripDbContext))]
-    partial class WorldTripDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171003114101_RemoveDeleteBool")]
+    partial class RemoveDeleteBool
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -139,8 +140,6 @@ namespace WorldTripLog.Web.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<DateTime?>("Deleted");
-
                     b.Property<double>("Latitude");
 
                     b.Property<double>("Longitude");
@@ -174,8 +173,6 @@ namespace WorldTripLog.Web.Migrations
                     b.Property<string>("CreatedBy");
 
                     b.Property<DateTime>("CreatedDate");
-
-                    b.Property<DateTime?>("Deleted");
 
                     b.Property<string>("ModifiedBy");
 
