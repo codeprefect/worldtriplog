@@ -30,7 +30,7 @@
                 }
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Production"
+                "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceRoot}/src/WorldTripLog.Web/Views"
