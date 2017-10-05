@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -5,11 +7,14 @@ namespace WorldTripLog.Web.Helpers
 {
     public static class ModelStateDictionaryHelper
     {
-        public static string ToStringResponse(this ModelStateDictionary model)
+        public static List<string> ToStringResponse(this ModelStateDictionary model)
         {
-            var result = new StringBuilder();
-            result.Append("Hello you!");
-            return result.ToString();
+            var result = new List<string>();
+            foreach (var value in model.Values)
+            {
+                result.AddRange(value.Errors.Select(x => x.ErrorMessage));
+            }
+            return result;
         }
     }
 }

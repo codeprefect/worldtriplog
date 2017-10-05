@@ -60,7 +60,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 return StatusCode(500, new ErrorMessage
                 {
-                    reason = ex.Message
+                    reasons = { ex.Message }
                 });
             }
         }
@@ -92,7 +92,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 return StatusCode(500, new ErrorMessage
                 {
-                    reason = ex.Message
+                    reasons = { ex.Message }
                 });
             }
         }
@@ -127,7 +127,7 @@ namespace WorldTripLog.Web.Controllers.Api
                     return StatusCode(500, new ErrorMessage
                     {
                         message = "trip creation failed",
-                        reason = e.Message
+                        reasons = { e.Message }
                     });
                 }
             }
@@ -135,7 +135,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 return StatusCode(500, new ErrorMessage
                 {
-                    reason = ModelState.ToStringResponse()
+                    reasons = ModelState.ToStringResponse()
                 });
             }
         }
@@ -170,7 +170,7 @@ namespace WorldTripLog.Web.Controllers.Api
                     return StatusCode(500, new ErrorMessage
                     {
                         message = "trip update failed",
-                        reason = e.Message
+                        reasons = { e.Message }
                     });
                 }
             }
@@ -178,7 +178,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 return StatusCode(500, new ErrorMessage
                 {
-                    reason = ModelState.ToStringResponse()
+                    reasons = ModelState.ToStringResponse()
                 });
             }
         }
@@ -212,7 +212,7 @@ namespace WorldTripLog.Web.Controllers.Api
                 {
                     return StatusCode(500, new ErrorMessage
                     {
-                        reason = e.Message
+                        reasons = { e.Message }
                     });
                 }
             }
@@ -221,7 +221,7 @@ namespace WorldTripLog.Web.Controllers.Api
                 return StatusCode(500, new ErrorMessage
                 {
                     message = "invalid id",
-                    reason = "id must be greater than 0"
+                    reasons = { "id must be greater than 0" }
                 });
             }
         }

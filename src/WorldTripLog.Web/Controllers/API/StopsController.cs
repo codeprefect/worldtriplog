@@ -62,7 +62,7 @@ namespace WorldTripLog.Web.Controllers.Api
                 _logger.LogError($"failed to execute GET: {ex.Message}");
                 return StatusCode(500, new ErrorMessage
                 {
-                    reason = ex.Message
+                    reasons = { ex.Message }
                 });
             }
         }
@@ -97,7 +97,7 @@ namespace WorldTripLog.Web.Controllers.Api
                 _logger.LogError($"failed to get stop: ${ ex.Message}");
                 return StatusCode(500, new ErrorMessage
                 {
-                    reason = ex.Message
+                    reasons = { ex.Message }
                 });
             }
         }
@@ -134,7 +134,7 @@ namespace WorldTripLog.Web.Controllers.Api
                 {
                     return StatusCode(500, new ErrorMessage
                     {
-                        reason = $"stop creation failed due to: {e.Message}"
+                        reasons = { $"stop creation failed due to: {e.Message}" }
                     });
                 }
             }
@@ -142,7 +142,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 return StatusCode(500, new ErrorMessage
                 {
-                    reason = ModelState.ToStringResponse()
+                    reasons = ModelState.ToStringResponse()
                 });
             }
         }
@@ -176,7 +176,7 @@ namespace WorldTripLog.Web.Controllers.Api
                 {
                     return StatusCode(500, new ErrorMessage
                     {
-                        reason = $"stop update failed due to: {e.Message}"
+                        reasons = { $"stop update failed due to: {e.Message}" }
                     });
                 }
             }
@@ -184,7 +184,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 return StatusCode(500, new ErrorMessage
                 {
-                    reason = ModelState.ToStringResponse()
+                    reasons = ModelState.ToStringResponse()
                 });
             }
         }
@@ -219,7 +219,7 @@ namespace WorldTripLog.Web.Controllers.Api
                     return StatusCode(500, new ErrorMessage
                     {
                         message = "Stop deletion failed",
-                        reason = e.Message
+                        reasons = { e.Message }
                     });
                 }
             }
@@ -227,7 +227,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 return StatusCode(500, new ErrorMessage
                 {
-                    reason = $"invalid stop id: {id}"
+                    reasons = { $"invalid stop id: {id}" }
                 });
             }
         }
