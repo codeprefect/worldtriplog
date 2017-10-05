@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using WorldTripLog.Web.Data;
 using WorldTripLog.Web.Helpers;
@@ -39,14 +38,14 @@ namespace WorldTripLog.Web.Controllers.Api
         /// <response code="200">
         /// returns list of all the stops
         /// </response>
-        /// <response code="400">
-        /// if stops is empty
+        /// <response code="401">
+        /// unauthorized
         /// </response>
         /// <response code="500">
         /// some internal errors
         /// </response>
         [ProducesResponseType(typeof(IEnumerable<StopVModel>), 200)]
-        [ProducesResponseType(typeof(ErrorMessage), 400)]
+        [ProducesResponseType(typeof(ErrorMessage), 401)]
         [ProducesResponseType(typeof(ErrorMessage), 500)]
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -56,22 +55,14 @@ namespace WorldTripLog.Web.Controllers.Api
                 Expression<Func<Stop, bool>> filter = s => s.TripID == TripID && s.CreatedBy == UserID;
 
                 var stops = await _stops.GetAsync(filter: filter);
-                return stops.Any() ? Ok(stops.ToVModel()) : throw new InvalidOperationException();
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new ErrorMessage
-                {
-                    message = "failed to get stops",
-                    reason = "no stops on the given trip or trip do not exist"
-                });
+                return stops.Any() ? Ok(stops.ToVModel()) : throw new InvalidOperationException(message: "current user has not trips yet");
             }
             catch (Exception ex)
             {
                 _logger.LogError($"failed to execute GET: {ex.Message}");
                 return StatusCode(500, new ErrorMessage
                 {
-                    reason = ex.Message
+                    reasons = { ex.Message }
                 });
             }
         }
@@ -82,14 +73,14 @@ namespace WorldTripLog.Web.Controllers.Api
         /// <response code="200">
         /// returns the required stop
         /// </response>
-        /// <response code="400">
-        /// if stops does not exist
+        /// <response code="401">
+        /// unauthorized
         /// </response>
         /// <response code="500">
         /// some internal errors
         /// </response>
         [ProducesResponseType(typeof(StopVModel), 200)]
-        [ProducesResponseType(typeof(ErrorMessage), 400)]
+        [ProducesResponseType(typeof(ErrorMessage), 401)]
         [ProducesResponseType(typeof(ErrorMessage), 500)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
@@ -99,22 +90,14 @@ namespace WorldTripLog.Web.Controllers.Api
                 Expression<Func<Stop, bool>> filterOne = (s) => s.TripID == TripID && s.CreatedBy == UserID && s.Id == id;
 
                 var stop = await _stops.GetOneAsync(filter: filterOne);
-                return stop != null ? Ok(stop.ToVModel()) : throw new InvalidOperationException();
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new ErrorMessage
-                {
-                    message = "no stop with the specified id and tripID",
-                    reason = $"given id {id} is invalid"
-                });
+                return stop != null ? Ok(stop.ToVModel()) : throw new InvalidOperationException(message: "invalid tripID and stopID combination");
             }
             catch (Exception ex)
             {
                 _logger.LogError($"failed to get stop: ${ ex.Message}");
                 return StatusCode(500, new ErrorMessage
                 {
-                    reason = ex.Message
+                    reasons = { ex.Message }
                 });
             }
         }
@@ -122,18 +105,18 @@ namespace WorldTripLog.Web.Controllers.Api
         /// <summary>
         /// create a new stop under the trip with tripID
         /// </summary>
-        /// <response code="200">
+        /// <response code="201">
         /// returns the newly created stop
         /// </response>
-        /// <response code="400">
-        /// request is not a valid stop
+        /// <response code="401">
+        /// unauthorized
         /// </response>
         /// <response code="500">
         /// some internal errors or invalid tripID
         /// </response>
-        [ProducesResponseType(typeof(StopVModel), 200)]
+        [ProducesResponseType(typeof(StopVModel), 201)]
+        [ProducesResponseType(typeof(ErrorMessage), 401)]
         [ProducesResponseType(typeof(ErrorMessage), 500)]
-        [ProducesResponseType(typeof(ModelStateDictionary), 400)]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]StopVModel stop)
         {
@@ -151,13 +134,16 @@ namespace WorldTripLog.Web.Controllers.Api
                 {
                     return StatusCode(500, new ErrorMessage
                     {
-                        reason = $"stop creation failed due to: {e.Message}"
+                        reasons = { $"stop creation failed due to: {e.Message}" }
                     });
                 }
             }
             else
             {
-                return BadRequest(ModelState);
+                return StatusCode(500, new ErrorMessage
+                {
+                    reasons = ModelState.ToStringResponse()
+                });
             }
         }
 
@@ -166,15 +152,15 @@ namespace WorldTripLog.Web.Controllers.Api
         /// </summary>
         /// <response code="200">
         /// returns the just updated stop</response>
-        /// <response code="400">
-        /// when the request body is invalid
+        /// <response code="401">
+        /// unauthorized
         /// </response>
         /// <response code="500">
-        /// internal server error(s)
+        /// other errors
         /// </response>
         [ProducesResponseType(typeof(StopVModel), 200)]
+        [ProducesResponseType(typeof(ErrorMessage), 401)]
         [ProducesResponseType(typeof(ErrorMessage), 500)]
-        [ProducesResponseType(typeof(ModelStateDictionary), 400)]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put([FromBody]StopVModel stop)
         {
@@ -190,13 +176,16 @@ namespace WorldTripLog.Web.Controllers.Api
                 {
                     return StatusCode(500, new ErrorMessage
                     {
-                        reason = $"stop update failed due to: {e.Message}"
+                        reasons = { $"stop update failed due to: {e.Message}" }
                     });
                 }
             }
             else
             {
-                return BadRequest(ModelState);
+                return StatusCode(500, new ErrorMessage
+                {
+                    reasons = ModelState.ToStringResponse()
+                });
             }
         }
 
@@ -205,15 +194,15 @@ namespace WorldTripLog.Web.Controllers.Api
         /// </summary>
         /// <response code="200">
         /// returns the request status</response>
-        /// <response code="400">
-        /// when the request body is invalid
+        /// <response code="401">
+        /// unauthorized
         /// </response>
         /// <response code="500">
         /// internal server error(s)
         /// </response>
         [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(ErrorMessage), 401)]
         [ProducesResponseType(typeof(ErrorMessage), 500)]
-        [ProducesResponseType(typeof(ErrorMessage), 400)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -230,15 +219,15 @@ namespace WorldTripLog.Web.Controllers.Api
                     return StatusCode(500, new ErrorMessage
                     {
                         message = "Stop deletion failed",
-                        reason = e.Message
+                        reasons = { e.Message }
                     });
                 }
             }
             else
             {
-                return BadRequest(new ErrorMessage
+                return StatusCode(500, new ErrorMessage
                 {
-                    reason = $"invalid stop id: {id}"
+                    reasons = { $"invalid stop id: {id}" }
                 });
             }
         }
