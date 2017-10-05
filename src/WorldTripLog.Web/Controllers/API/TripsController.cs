@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using WorldTripLog.Web.Data;
 using WorldTripLog.Web.Helpers;
@@ -136,7 +135,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 return StatusCode(500, new ErrorMessage
                 {
-                    reason = ModelState.ToString()
+                    reason = ModelState.ToStringResponse()
                 });
             }
         }
@@ -154,7 +153,7 @@ namespace WorldTripLog.Web.Controllers.Api
         /// </response>
         [ProducesResponseType(typeof(TripVModel), 200)]
         [ProducesResponseType(typeof(ErrorMessage), 401)]
-        [ProducesResponseType(typeof(ModelStateDictionary), 500)]
+        [ProducesResponseType(typeof(ErrorMessage), 500)]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put([FromBody]TripVModel trip)
         {
@@ -179,7 +178,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 return StatusCode(500, new ErrorMessage
                 {
-                    reason = ModelState.ToString()
+                    reason = ModelState.ToStringResponse()
                 });
             }
         }
