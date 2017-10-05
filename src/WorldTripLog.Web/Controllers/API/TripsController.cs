@@ -39,14 +39,14 @@ namespace WorldTripLog.Web.Controllers.Api
         /// <response code="200">
         /// returns list of all the trips belonging to the authenticated user
         /// </response>
-        /// <response code="400">
-        /// if trips is empty
+        /// <response code="401">
+        /// unauthorized
         /// </response>
         /// <response code="500">
         /// some internal errors
         /// </response>
         [ProducesResponseType(typeof(IEnumerable<TripVModel>), 200)]
-        [ProducesResponseType(typeof(ErrorMessage), 400)]
+        [ProducesResponseType(typeof(ErrorMessage), 401)]
         [ProducesResponseType(typeof(ErrorMessage), 500)]
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -56,14 +56,6 @@ namespace WorldTripLog.Web.Controllers.Api
                 Expression<Func<Trip, bool>> filter = t => t.CreatedBy == UserID;
                 var trips = await _trips.GetAsync(filter: filter);
                 return trips.Any() ? Ok(trips.ToVModel()) : throw new InvalidOperationException(message: "no trips yet");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return StatusCode(400, new ErrorMessage
-                {
-                    message = "failed to get trips",
-                    reason = ex.Message
-                });
             }
             catch (Exception ex)
             {
@@ -79,14 +71,14 @@ namespace WorldTripLog.Web.Controllers.Api
         /// </summary>
         /// <response code="200">
         /// returns a trip with the given id</response>
-        /// <response code="400">
-        /// if trip with given id does not exist
+        /// <response code="401">
+        /// unauthorized
         /// </response>
         /// <response code="500">
         /// some unexpected error
         /// </response>
         [ProducesResponseType(typeof(TripVModel), 200)]
-        [ProducesResponseType(typeof(ErrorMessage), 400)]
+        [ProducesResponseType(typeof(ErrorMessage), 401)]
         [ProducesResponseType(typeof(ErrorMessage), 500)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
@@ -96,14 +88,6 @@ namespace WorldTripLog.Web.Controllers.Api
                 Expression<Func<Trip, bool>> filter = t => t.CreatedBy == UserID && t.Id == id;
                 var trip = await _trips.GetOneAsync(filter: filter);
                 return trip != null ? Ok(trip.ToVModel()) : throw new InvalidOperationException(message: $"trip with id: {id} does not exist");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new ErrorMessage
-                {
-                    message = "requested resource does not exist",
-                    reason = ex.Message
-                });
             }
             catch (Exception ex)
             {
@@ -119,15 +103,15 @@ namespace WorldTripLog.Web.Controllers.Api
         /// </summary>
         /// <response code="201">
         /// returns the just created trip</response>
-        /// <response code="400">
-        /// when the request body is invalid
+        /// <response code="401">
+        /// unauthorized
         /// </response>
         /// <response code="500">
         /// when the entity validation fails or some internal server errors
         /// </response>
         [ProducesResponseType(typeof(TripVModel), 201)]
+        [ProducesResponseType(typeof(ErrorMessage), 401)]
         [ProducesResponseType(typeof(ErrorMessage), 500)]
-        [ProducesResponseType(typeof(ModelStateDictionary), 400)]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]TripVModel trip)
         {
@@ -150,7 +134,10 @@ namespace WorldTripLog.Web.Controllers.Api
             }
             else
             {
-                return BadRequest(ModelState);
+                return StatusCode(500, new ErrorMessage
+                {
+                    reason = ModelState.ToString()
+                });
             }
         }
 
@@ -159,15 +146,15 @@ namespace WorldTripLog.Web.Controllers.Api
         /// </summary>
         /// <response code="200">
         /// returns the just updated trip</response>
-        /// <response code="400">
-        /// when the request body is invalid
+        /// <response code="401">
+        /// unauthorized
         /// </response>
         /// <response code="500">
         /// internal server error(s)
         /// </response>
         [ProducesResponseType(typeof(TripVModel), 200)]
-        [ProducesResponseType(typeof(ErrorMessage), 500)]
-        [ProducesResponseType(typeof(ModelStateDictionary), 400)]
+        [ProducesResponseType(typeof(ErrorMessage), 401)]
+        [ProducesResponseType(typeof(ModelStateDictionary), 500)]
         [HttpPut("{id}")]
         public async Task<IActionResult> Put([FromBody]TripVModel trip)
         {
@@ -190,7 +177,10 @@ namespace WorldTripLog.Web.Controllers.Api
             }
             else
             {
-                return BadRequest(ModelState);
+                return StatusCode(500, new ErrorMessage
+                {
+                    reason = ModelState.ToString()
+                });
             }
         }
 
@@ -199,8 +189,8 @@ namespace WorldTripLog.Web.Controllers.Api
         /// </summary>
         /// <response code="200">
         /// returns a message about the deletion status</response>
-        /// <response code="400">
-        /// when the given id is not valid
+        /// <response code="401">
+        /// unauthorized
         /// </response>
         /// <response code="500">
         /// when an unexpected occurs
@@ -229,7 +219,7 @@ namespace WorldTripLog.Web.Controllers.Api
             }
             else
             {
-                return BadRequest(new ErrorMessage
+                return StatusCode(500, new ErrorMessage
                 {
                     message = "invalid id",
                     reason = "id must be greater than 0"
