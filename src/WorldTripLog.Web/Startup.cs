@@ -44,7 +44,6 @@ namespace WorldTripLog.Web
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.Name = "AuthCookie";
-                options.Cookie.Domain = "localhost";
                 options.Cookie.Path = "/";
                 options.Cookie.HttpOnly = false;
                 options.Cookie.SameSite = SameSiteMode.Lax;
@@ -55,7 +54,6 @@ namespace WorldTripLog.Web
                     if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
                     {
                         ctx.Response.StatusCode = 401;
-                        //ctx.Response. = new Stream("Unathenticated request");
                     }
                     else
                     {
