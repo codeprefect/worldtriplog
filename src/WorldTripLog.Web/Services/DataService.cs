@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using WorldTripLog.Web.DAL;
-using WorldTripLog.Web.Models;
+using WorldTripLog.Data.Interfaces;
+using WorldTripLog.Domain.Interfaces;
 
 namespace WorldTripLog.Web.Services
 {
