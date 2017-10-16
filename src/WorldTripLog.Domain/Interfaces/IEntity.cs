@@ -1,7 +1,7 @@
 
 using System;
 
-namespace WorldTripLog.Web.DAL
+namespace WorldTripLog.Domain.Interfaces
 {
     public interface IModifiableEntity
     {

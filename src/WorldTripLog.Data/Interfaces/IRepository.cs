@@ -1,7 +1,8 @@
 
 using System.Threading.Tasks;
+using WorldTripLog.Domain.Interfaces;
 
-namespace WorldTripLog.Web.DAL
+namespace WorldTripLog.Data.Interfaces
 {
     public interface IRepository<TContext> : IReadOnlyRepository
     {

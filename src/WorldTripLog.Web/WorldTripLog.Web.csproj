@@ -19,6 +19,10 @@
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WorldTripLog.Domain\WorldTripLog.Domain.csproj" />
+    <ProjectReference Include="..\WorldTripLog.Data\WorldTripLog.Data.csproj" />
+  </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netcoreapp2.0\WorldTripLogApi.xml</DocumentationFile>
   </PropertyGroup>

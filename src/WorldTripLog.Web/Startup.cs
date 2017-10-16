@@ -12,9 +12,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
 using Swashbuckle.AspNetCore.Swagger;
-using WorldTripLog.Web.DAL;
-using WorldTripLog.Web.Data;
+using WorldTripLog.Data.Interfaces;
+using WorldTripLog.Data.Repositories;
 using WorldTripLog.Web.Models;
+using WorldTripLog.Web.Data;
 using WorldTripLog.Web.Services;
 
 namespace WorldTripLog.Web

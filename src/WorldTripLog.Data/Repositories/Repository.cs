@@ -2,9 +2,10 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using WorldTripLog.Web.Helpers;
+using WorldTripLog.Domain.Interfaces;
+using WorldTripLog.Data.Interfaces;
 
-namespace WorldTripLog.Web.DAL
+namespace WorldTripLog.Data.Repositories
 {
     public class Repository<TContext> : ReadOnlyRepository<TContext>, IRepository<TContext> where TContext : DbContext
     {

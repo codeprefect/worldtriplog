@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using WorldTripLog.Domain.Interfaces;
 
-namespace WorldTripLog.Web.DAL
+namespace WorldTripLog.Data.Interfaces
 {
     public interface IReadOnlyRepository
     {

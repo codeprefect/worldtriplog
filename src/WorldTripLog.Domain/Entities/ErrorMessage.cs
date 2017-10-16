@@ -1,7 +1,7 @@
 
 using System.Collections.Generic;
 
-namespace WorldTripLog.Web.Models
+namespace WorldTripLog.Domain.Entities
 {
     public class ErrorMessage
     {
