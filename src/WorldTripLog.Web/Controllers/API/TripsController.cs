@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using WorldTripLog.Web.Data;
+using WorldTripLog.Domain.Entities;
 using WorldTripLog.Web.Helpers;
 using WorldTripLog.Web.Models;
+using WorldTripLog.Web.Data;
 using WorldTripLog.Web.Models.ViewModels;
 using WorldTripLog.Web.Services;
 

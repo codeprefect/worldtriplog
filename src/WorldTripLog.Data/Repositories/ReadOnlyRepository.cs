@@ -5,8 +5,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using WorldTripLog.Domain.Interfaces;
+using WorldTripLog.Data.Interfaces;
 
-namespace WorldTripLog.Web.DAL
+namespace WorldTripLog.Data.Repositories
 {
     public class ReadOnlyRepository<TContext> : IReadOnlyRepository where TContext : DbContext
     {

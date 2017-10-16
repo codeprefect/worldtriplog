@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using WorldTripLog.Web.DAL;
+using WorldTripLog.Domain.Interfaces;
 
 namespace WorldTripLog.Web.Models.ViewModels
 {

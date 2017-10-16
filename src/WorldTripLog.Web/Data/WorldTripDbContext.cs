@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WorldTripLog.Web.Helpers;
+using WorldTripLog.Domain.Entities;
 using WorldTripLog.Web.Models;
 
 namespace WorldTripLog.Web.Data

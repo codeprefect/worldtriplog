@@ -1,7 +1,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using WorldTripLog.Web.Models;
+using WorldTripLog.Domain.Entities;
 using WorldTripLog.Web.Models.ViewModels;
 
 namespace WorldTripLog.Web.Helpers

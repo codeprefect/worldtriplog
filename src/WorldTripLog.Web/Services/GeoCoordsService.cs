@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using WorldTripLog.Web.Models;
+using WorldTripLog.Domain.Entities;
 
 namespace WorldTripLog.Web.Services
 {

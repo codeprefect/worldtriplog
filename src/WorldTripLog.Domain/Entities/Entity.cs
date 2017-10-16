@@ -1,9 +1,9 @@
-
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WorldTripLog.Domain.Interfaces;
 
-namespace WorldTripLog.Web.DAL
+namespace WorldTripLog.Domain.Entities
 {
     public abstract class Entity<T> : IEntity<T>
     {

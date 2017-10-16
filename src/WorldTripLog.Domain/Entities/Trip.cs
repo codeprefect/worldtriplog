@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using WorldTripLog.Web.DAL;
 
-namespace WorldTripLog.Web.Models
+namespace WorldTripLog.Domain.Entities
 {
     public class Trip : Entity<int>
     {
