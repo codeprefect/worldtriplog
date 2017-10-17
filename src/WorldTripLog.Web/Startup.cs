@@ -67,6 +67,16 @@ namespace WorldTripLog.Web
                 };
             });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Authenticated", policy =>
+                {
+                    policy.AddAuthenticationSchemes("Identity.Application", "Bearer")
+                        .RequireAuthenticatedUser()
+                        .Build();
+                });
+            });
+
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IDataService<,>), typeof(DataService<,>));
             services.AddTransient<GeoCoordsService>();
