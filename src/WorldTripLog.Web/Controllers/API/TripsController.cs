@@ -19,7 +19,7 @@ namespace WorldTripLog.Web.Controllers.Api
     /// <summary>
     /// Trips Controller, providing restful crud operations on trips
     /// </summary>
-    [Authorize]
+    [Authorize(policy: "Authenticated")]
     [Route("api/[controller]")]
     public class TripsController : BaseApiController
     {
