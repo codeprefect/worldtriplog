@@ -12,10 +12,10 @@
 * EF Core 2.0 Code-First Approach
 * Database migration automation with **DbUp**
 * Continuous integration and deployment with **VSTS** and **Azure**
+* JWT Token Authentication
 
 The following will be added soon:
 
-* JWT Token Authentication
 * AWS S3 Integration for Media storage
 * Third-party authentication.
 * Your suggested feature.
