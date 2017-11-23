@@ -12,13 +12,15 @@
 * Database migration automation with **[DbUp](https://marketplace.visualstudio.com/items?itemName=johanclasson.UpdateDatabaseWithDbUp)**
 * Continuous integration and deployment with **[VSTS](https://visualstudio.com)** and **[Azure](https://portal.azure.com)**
 * JWT Token Authentication
+* Google Maps API
+* Bing Locations API
+* Unit Testing with **[xUNit](https://xunit.github.io)** and **[Moq](https://github.com/moq/moq)**
 
 The following will be added soon:
 
 * AWS S3 Integration for Media storage
 * Third-party authentication.
 * Your suggested feature.
-* Unit Testing with **[xUNit](https://xunit.github.io)**
 
 You can use the application in three easy steps:
 

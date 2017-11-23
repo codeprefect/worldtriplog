@@ -9,6 +9,6 @@ namespace WorldTripLog.Domain.Entities
         public DateTime Arrival { get; set; }
         public int Order { get; set; }
         public int TripID { get; set; }
-        public Trip Trip { get; set; }
+        public virtual Trip Trip { get; set; }
     }
 }

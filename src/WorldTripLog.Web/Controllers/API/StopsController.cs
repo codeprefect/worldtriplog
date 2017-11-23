@@ -127,8 +127,7 @@ namespace WorldTripLog.Web.Controllers.Api
                 {
                     var _stop = await _coordService.AddGeoCoords(stop.ToModel());
                     _stop.TripID = TripID;
-                    _stops.Create(_stop, UserID);
-                    await _stops.SaveAsync();
+                    await _stops.Create(_stop, UserID);
                     return Created($"/api/trips/{TripID}/stops", _stop.ToVModel());
                 }
                 catch (Exception e)
@@ -169,8 +168,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 try
                 {
-                    _stops.Update(stop.ToModel(), UserID);
-                    await _stops.SaveAsync();
+                    await _stops.Update(stop.ToModel(), UserID);
                     return Created($"/api/trips/{TripID}/stops/{stop.Id}", stop);
                 }
                 catch (Exception e)
@@ -211,8 +209,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 try
                 {
-                    _stops.Delete(id);
-                    await _stops.SaveAsync();
+                    await _stops.Delete(id);
                     return Ok($"Deleted Successfully");
                 }
                 catch (Exception e)
