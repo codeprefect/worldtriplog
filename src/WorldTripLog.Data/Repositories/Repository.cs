@@ -44,11 +44,6 @@ namespace WorldTripLog.Data.Repositories
             _context.Entry(entity).State = EntityState.Detached;
         }
 
-        public virtual void Save()
-        {
-            _context.SaveChanges();
-        }
-
         public virtual Task SaveAsync()
         {
             return _context.SaveChangesAsync();

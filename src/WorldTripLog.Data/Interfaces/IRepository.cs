@@ -18,8 +18,6 @@ namespace WorldTripLog.Data.Interfaces
         void Delete<TEntity>(TEntity entity)
             where TEntity : class, IEntity;
 
-        void Save();
-
         Task SaveAsync();
     }
 }

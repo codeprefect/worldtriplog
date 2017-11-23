@@ -10,20 +10,8 @@ namespace WorldTripLog.Web.Services
     public interface IDataService<TContext, TEntity>
     {
         #region all the getters first
-        IEnumerable<TEntity> GetAll(
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = null,
-            int? skip = null,
-            int? take = null);
 
         Task<IEnumerable<TEntity>> GetAllAsync(
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = null,
-            int? skip = null,
-            int? take = null);
-
-        IEnumerable<TEntity> Get(
-            Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = null,
             int? skip = null,
@@ -36,17 +24,8 @@ namespace WorldTripLog.Web.Services
             int? skip = null,
             int? take = null);
 
-        TEntity GetOne(
-            Expression<Func<TEntity, bool>> filter = null,
-            string includeProperties = null);
-
         Task<TEntity> GetOneAsync(
             Expression<Func<TEntity, bool>> filter = null,
-            string includeProperties = null);
-
-        TEntity GetFirst(
-            Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = null);
 
         Task<TEntity> GetFirstAsync(
@@ -54,15 +33,9 @@ namespace WorldTripLog.Web.Services
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = null);
 
-        TEntity GetById(object id);
-
         Task<TEntity> GetByIdAsync(object id);
 
-        int GetCount(Expression<Func<TEntity, bool>> filter = null);
-
         Task<int> GetCountAsync(Expression<Func<TEntity, bool>> filter = null);
-
-        bool GetExists(Expression<Func<TEntity, bool>> filter = null);
 
         Task<bool> GetExistsAsync(Expression<Func<TEntity, bool>> filter = null);
 
@@ -70,17 +43,13 @@ namespace WorldTripLog.Web.Services
 
         #region and here are the create, update, save and delete
 
-        void Create(TEntity entity, string createdBy = null);
+        Task Create(TEntity entity, string createdBy = null);
 
-        void Update(TEntity entity, string modifiedBy = null);
+        Task Update(TEntity entity, string modifiedBy = null);
 
-        void Delete(object id);
+        Task Delete(object id);
 
-        void Delete(TEntity entity);
-
-        void Save();
-
-        Task SaveAsync();
+        Task Delete(TEntity entity);
 
         #endregion and they end here
     }
