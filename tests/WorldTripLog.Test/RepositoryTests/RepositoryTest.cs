@@ -23,6 +23,7 @@ namespace WorldTripLog.Test.RepositoryTest
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
             context.Trips.AddRange(GlobalVariables.GetTrips());
+            context.Stops.AddRange(GlobalVariables.GetStops());
             context.SaveChanges();
             return context;
         }
