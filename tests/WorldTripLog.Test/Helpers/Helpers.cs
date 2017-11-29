@@ -32,10 +32,9 @@ namespace WorldTripLog.Test.Helpers
         public static Mock<DbSet<T>> AsDbSetMockWithCreate<T>(this List<T> list) where T : Entity<int>
         {
             IQueryable<T> queryableList = list.AsQueryable();
-            //Mock<DbSet<T>> dbSetMock = new Mock<DbSet<T>>();
-            Mock<DbSet<T>> dbSetMock = AsDbSetMock(list);
+            DbSet<T> dbSetMock = AsDbSetMock(list);
 
-            dbSetMock.Setup(x => x.Add(It.IsAny<T>())).Callback<T>((s) => list.Append(s));
+            dbSetMock.Setup(x => x.Add(It.IsAny<T>())).Callback<T>((s) => list.Add(s));
 
             return dbSetMock;
         }

@@ -12,19 +12,19 @@ namespace WorldTripLog.Test
         private static string _user = "testuser";
         private static List<Trip> _trips { get; set; } = new List<Trip> {
             new Trip {
-                //Id = 1,
+                Id = 1,
                 CreatedDate = DateTime.UtcNow,
                 CreatedBy = _user,
                 Name = "Tour of Africa"
             },
             new Trip {
-                //Id = 2,
+                Id = 2,
                 CreatedDate = DateTime.UtcNow,
                 CreatedBy = _user,
                 Name = "Tour of Europe"
             },
             new Trip {
-                //Id = 3,
+                Id = 3,
                 CreatedDate = DateTime.UtcNow,
                 CreatedBy = _user,
                 Name = "Ride of Asia"
@@ -33,7 +33,7 @@ namespace WorldTripLog.Test
 
         private static List<Stop> _stops { get; set; } = new List<Stop> {
             new Stop {
-                //Id = 1,
+                Id = 1,
                 CreatedDate = DateTime.UtcNow,
                 CreatedBy = _user,
                 Arrival = new DateTime(2017, 10, 1),
@@ -41,7 +41,7 @@ namespace WorldTripLog.Test
                 TripID = 1
             },
             new Stop {
-                //Id = 2,
+                Id = 2,
                 CreatedDate = DateTime.UtcNow,
                 CreatedBy = _user,
                 Arrival = new DateTime(2017, 10, 2),
@@ -49,7 +49,7 @@ namespace WorldTripLog.Test
                 TripID = 1
             },
             new Stop {
-                //Id = 3,
+                Id = 3,
                 CreatedDate = DateTime.UtcNow,
                 CreatedBy = _user,
                 Arrival = new DateTime(2017, 10, 3),
@@ -57,7 +57,7 @@ namespace WorldTripLog.Test
                 TripID = 1
             },
             new Stop {
-                //Id = 4,
+                Id = 4,
                 CreatedDate = DateTime.UtcNow,
                 CreatedBy = _user,
                 Arrival = new DateTime(2017, 10, 4),
@@ -65,7 +65,7 @@ namespace WorldTripLog.Test
                 TripID = 2
             },
             new Stop {
-                //Id = 5,
+                Id = 5,
                 CreatedDate = DateTime.UtcNow,
                 CreatedBy = _user,
                 Arrival = new DateTime(2017, 10, 5),
@@ -73,7 +73,7 @@ namespace WorldTripLog.Test
                 TripID = 3
             },
             new Stop {
-                //Id = 6,
+                Id = 6,
                 CreatedDate = DateTime.UtcNow,
                 CreatedBy = _user,
                 Arrival = new DateTime(2017, 10, 6),
