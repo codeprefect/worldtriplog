@@ -52,8 +52,9 @@ namespace WorldTripLog.Test.Helpers
             dbSetMock.Setup(m => m.FindAsync(It.IsAny<object[]>()))
                 .Returns<object[]>(ids => Task.Run(() => queryableList.FirstOrDefault(t => t.Id == (int)ids[0])));
 
-            dbSetMock.Setup(m => m.Find(It.IsAny<object[]>()))
-                .Returns<object[]>((ids) => queryableList.FirstOrDefault(t => t.Id == (int)ids[0]));
+            // dbSetMock.As<IQueryable<T>>()
+            //     .Setup(m => m.Include(It.IsAny<string>()))
+            //     .Returns(dbSetMock.Object);
 
             return dbSetMock;
         }
@@ -66,6 +67,8 @@ namespace WorldTripLog.Test.Helpers
             dbSetMock = dbSetMock.AsyncActive(queryableList);
 
             dbSetMock.Setup(x => x.Add(It.IsAny<T>())).Callback<T>((s) => list.Add(s));
+            dbSetMock.Setup(m => m.FindAsync(It.IsAny<object[]>()))
+                .Returns<object[]>(ids => Task.Run(() => list.FirstOrDefault(t => t.Id == (int)ids[0])));
 
             return dbSetMock;
         }

@@ -16,16 +16,21 @@ namespace WorldTripLog.Test.RepositoryTest
 {
     public class GenericRepositoryTest
     {
-        private static WorldTripDbContext InitRepo()
+        public static WorldTripDbContext InitContext()
         {
-            var builder = new DbContextOptionsBuilder<WorldTripDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString());
-            var context = new WorldTripDbContext(builder.Options);
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-            context.Trips.AddRange(GlobalVariables.GetTrips());
-            context.Stops.AddRange(GlobalVariables.GetStops());
-            context.SaveChanges();
-            return context;
+            var tripsMock = GlobalVariables.GetTrips().AsDbSetMock();
+            var stopsMock = GlobalVariables.GetStops().AsDbSetMock();
+
+            var worldTripDbContextMock = ContextHelpers.CreateDbContext(tripsMock, stopsMock);
+            return worldTripDbContextMock.Object;
+        }
+
+        public static WorldTripDbContext InitContextWithCreate()
+        {
+            var tripsMock = GlobalVariables.GetTrips().AsDbSetMockWithCreate();
+            var stopsMock = GlobalVariables.GetStops().AsDbSetMockWithCreate();
+            var worldTripDbContextMock = ContextHelpers.CreateDbContext(tripsMock, stopsMock);
+            return worldTripDbContextMock.Object;
         }
 
         public class GetAllAsyncTests
@@ -35,7 +40,7 @@ namespace WorldTripLog.Test.RepositoryTest
 
             public GetAllAsyncTests()
             {
-                _context = GenericRepositoryTest.InitRepo();
+                _context = GenericRepositoryTest.InitContext();
                 _repository = new Repository<WorldTripDbContext>(_context);
             }
 
@@ -84,12 +89,9 @@ namespace WorldTripLog.Test.RepositoryTest
             {
 
                 var trips = await _repository.GetAllAsync<Trip>(includeProperties: "Stops");
-                var contextTrips = _context.Trips.Include("Stops");
-
                 var firstTrip = trips.First();
-                var contextFirstTrip = contextTrips.First();
                 Assert.NotNull(firstTrip.Stops);
-                Assert.Equal(contextFirstTrip.Stops.Count(), firstTrip.Stops.Count());
+                Assert.Equal(_context.Trips.First().Stops.Count(), firstTrip.Stops.Count());
             }
 
             [Fact]
@@ -144,7 +146,7 @@ namespace WorldTripLog.Test.RepositoryTest
 
             public GetByIdAsyncTests()
             {
-                _context = GenericRepositoryTest.InitRepo();
+                _context = GenericRepositoryTest.InitContext();
                 _repository = new Repository<WorldTripDbContext>(_context);
             }
 
@@ -153,7 +155,7 @@ namespace WorldTripLog.Test.RepositoryTest
             {
                 var id = 1;
                 var trip = await _repository.GetByIdAsync<Trip>(id);
-                var contextTrip = _context.Trips.Find(id);
+                var contextTrip = _context.Trips.FindAsync(id).Result;
 
                 Assert.NotNull(trip);
                 Assert.IsType<Trip>(trip);
@@ -170,7 +172,7 @@ namespace WorldTripLog.Test.RepositoryTest
 
             public CreateTests()
             {
-                _context = GenericRepositoryTest.InitRepo();
+                _context = GenericRepositoryTest.InitContextWithCreate();
                 _repository = new Repository<WorldTripDbContext>(_context);
             }
 
@@ -179,17 +181,21 @@ namespace WorldTripLog.Test.RepositoryTest
             {
                 var trip = new Trip
                 {
+                    Id = 4,
                     Name = "Lagos Tour",
                     CreatedDate = DateTime.UtcNow
                 };
                 string creator = "testuser";
 
                 _repository.Create<Trip>(trip, creator);
-                await _repository.SaveAsync();
 
                 var trips = await _repository.GetAllAsync<Trip>();
                 trips = await _repository.GetAllAsync<Trip>();
                 Assert.Equal(4, trips.Count());
+
+                var gotTrip = await _repository.GetByIdAsync<Trip>(trip.Id);
+                Assert.NotNull(gotTrip);
+                Assert.Equal(trip.Name, gotTrip.Name);
             }
         }
     }
