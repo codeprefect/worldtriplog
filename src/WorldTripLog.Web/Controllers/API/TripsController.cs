@@ -119,8 +119,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 try
                 {
-                    _trips.Create(trip.ToModel(), UserID);
-                    await _trips.SaveAsync();
+                    await _trips.Create(trip.ToModel(), UserID);
                     return Created("/api/trips", trip);
                 }
                 catch (Exception e)
@@ -162,8 +161,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 try
                 {
-                    _trips.Update(trip.ToModel(), UserID);
-                    await _trips.SaveAsync();
+                    await _trips.Update(trip.ToModel(), UserID);
                     return Ok(trip);
                 }
                 catch (Exception e)
@@ -205,8 +203,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 try
                 {
-                    _trips.Delete(id);
-                    await _trips.SaveAsync();
+                    await _trips.Delete(id);
                     return Ok($"Deleted Successfully");
                 }
                 catch (Exception e)
