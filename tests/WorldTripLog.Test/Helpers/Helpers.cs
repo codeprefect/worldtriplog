@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using WorldTripLog.Domain.Entities;
+using WorldTripLog.Web.Data;
+using System.Threading.Tasks;
+using System.Linq.Expressions;
+using System;
+using System.Threading;
 
 namespace WorldTripLog.Test.Helpers
 {
@@ -20,11 +25,35 @@ namespace WorldTripLog.Test.Helpers
         {
             IQueryable<T> queryableList = list.AsQueryable();
             Mock<DbSet<T>> dbSetMock = new Mock<DbSet<T>>();
-            dbSetMock.As<IQueryable<T>>().Setup(x => x.Provider).Returns(queryableList.Provider);
-            dbSetMock.As<IQueryable<T>>().Setup(x => x.Expression).Returns(queryableList.Expression);
-            dbSetMock.As<IQueryable<T>>().Setup(x => x.ElementType).Returns(queryableList.ElementType);
-            dbSetMock.As<IQueryable<T>>().Setup(x => x.GetEnumerator()).Returns(queryableList.GetEnumerator());
-            dbSetMock.Setup(x => x.Find(It.IsAny<object[]>())).Returns<object[]>(ids => queryableList.SingleOrDefault(d => d.Id == (int)ids[0]));
+
+            dbSetMock = dbSetMock.AsyncActive(queryableList);
+
+            return dbSetMock;
+        }
+
+        public static Mock<DbSet<T>> AsyncActive<T>(this Mock<DbSet<T>> dbSetMock, IQueryable<T> queryableList) where T : Entity<int>
+        {
+            dbSetMock.As<IAsyncEnumerable<T>>()
+                .Setup(m => m.GetEnumerator())
+                .Returns(() => new TestAsyncEnumerator<T>(queryableList.GetEnumerator()));
+
+            dbSetMock.As<IQueryable<T>>()
+                .Setup(m => m.Provider)
+                .Returns(new TestAsyncQueryProvider<T>(queryableList.Provider));
+
+            dbSetMock.As<IQueryable<T>>()
+                .Setup(m => m.Expression)
+                .Returns(queryableList.Expression);
+
+            dbSetMock.As<IQueryable<T>>()
+                .Setup(m => m.ElementType)
+                .Returns(queryableList.ElementType);
+
+            dbSetMock.Setup(m => m.FindAsync(It.IsAny<object[]>()))
+                .Returns<object[]>(ids => Task.Run(() => queryableList.FirstOrDefault(t => t.Id == (int)ids[0])));
+
+            dbSetMock.Setup(m => m.Find(It.IsAny<object[]>()))
+                .Returns<object[]>((ids) => queryableList.FirstOrDefault(t => t.Id == (int)ids[0]));
 
             return dbSetMock;
         }
@@ -32,11 +61,28 @@ namespace WorldTripLog.Test.Helpers
         public static Mock<DbSet<T>> AsDbSetMockWithCreate<T>(this List<T> list) where T : Entity<int>
         {
             IQueryable<T> queryableList = list.AsQueryable();
-            DbSet<T> dbSetMock = AsDbSetMock(list);
+            Mock<DbSet<T>> dbSetMock = new Mock<DbSet<T>>();
+
+            dbSetMock = dbSetMock.AsyncActive(queryableList);
 
             dbSetMock.Setup(x => x.Add(It.IsAny<T>())).Callback<T>((s) => list.Add(s));
 
             return dbSetMock;
+        }
+    }
+
+    public static class ContextHelpers
+    {
+        public static Mock<WorldTripDbContext> CreateDbContext(Mock<DbSet<Trip>> trips, Mock<DbSet<Stop>> stops)
+        {
+            var mockContext = new Mock<WorldTripDbContext>();
+            mockContext.Setup(m => m.Trips).Returns(trips.Object);
+            mockContext.Setup(m => m.Stops).Returns(stops.Object);
+
+            mockContext.Setup(m => m.Set<Trip>()).Returns(trips.Object);
+            mockContext.Setup(m => m.Set<Stop>()).Returns(stops.Object);
+
+            return mockContext;
         }
     }
 }

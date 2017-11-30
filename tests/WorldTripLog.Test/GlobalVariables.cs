@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using WorldTripLog.Data.Repositories;
 using WorldTripLog.Domain.Entities;
@@ -84,12 +85,28 @@ namespace WorldTripLog.Test
 
         public static List<Trip> GetTrips()
         {
-            return _trips;
+            var trips = new List<Trip>();
+            foreach (var trip in _trips)
+            {
+                trip.Stops = new List<Stop>();
+                foreach (var stop in _stops.Where(s => s.TripID == trip.Id))
+                {
+                    trip.Stops.Add(stop);
+                }
+                trips.Add(trip);
+            }
+            return trips;
         }
 
         public static List<Stop> GetStops()
         {
-            return _stops;
+            var stops = new List<Stop>();
+            foreach (var stop in _stops)
+            {
+                stop.Trip = _trips.Where(t => t.Id == stop.Id).SingleOrDefault();
+                stops.Add(stop);
+            }
+            return stops;
         }
     }
 }
