@@ -1,5 +1,6 @@
 using System;
 using Xunit;
+using Shouldly;
 
 namespace WorldTripLog.Test
 {
@@ -8,13 +9,17 @@ namespace WorldTripLog.Test
         [Fact]
         public void TripsIsNotEmpty()
         {
-            Assert.NotEmpty(GlobalVariables.GetTrips());
+            var trips = GlobalVariables.GetTrips();
+            trips.ShouldNotBeNull();
+            trips.ShouldNotBeEmpty();
         }
 
         [Fact]
         public void StopsIsNotEmpty()
         {
-            Assert.NotEmpty(GlobalVariables.GetStops());
+            var stops = GlobalVariables.GetStops();
+            stops.ShouldNotBeNull();
+            stops.ShouldNotBeEmpty();
         }
     }
 }
