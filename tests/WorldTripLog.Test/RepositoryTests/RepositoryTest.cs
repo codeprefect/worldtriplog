@@ -237,6 +237,42 @@ namespace WorldTripLog.Test.RepositoryTest
             }
         }
 
+        public class GetOneAsyncTests
+        {
+            private readonly Repository<WorldTripDbContext> _repository;
+            private readonly WorldTripDbContext _context;
+
+            public GetOneAsyncTests()
+            {
+                _context = ContextHelpers.InitContext();
+                _repository = new Repository<WorldTripDbContext>(_context);
+            }
+
+            [Fact]
+            public async void WithFilter()
+            {
+                Expression<Func<Trip, bool>> filter = (t) => t.Name == "Tour of Europe";
+                var trip = await _repository.GetOneAsync<Trip>(filter: filter);
+                Assert.NotNull(trip);
+                Assert.Equal(_context.Trips.Where(filter).SingleOrDefault(), trip);
+
+                filter = (t) => t.Id == 4;
+                trip = await _repository.GetOneAsync<Trip>(filter: filter);
+                Assert.Null(trip);
+            }
+
+            [Fact]
+            public async void WithIncludeProperties()
+            {
+                Expression<Func<Trip, bool>> filter = (t) => t.Name == "Tour of Europe";
+                var trip = await _repository.GetOneAsync<Trip>(filter: filter, includeProperties: "Stops");
+                var contextTrip = _context.Trips.Where(filter).SingleOrDefault();
+                Assert.NotNull(trip.Stops);
+                Assert.Equal(contextTrip.Stops.Count(), trip.Stops.Count());
+                Assert.Equal(contextTrip.Stops, trip.Stops);
+            }
+        }
+
         public class GetByIdAsyncTests
         {
             private readonly Repository<WorldTripDbContext> _repository;
