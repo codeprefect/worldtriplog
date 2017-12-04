@@ -87,5 +87,22 @@ namespace WorldTripLog.Test.Helpers
 
             return mockContext;
         }
+
+        public static WorldTripDbContext InitContext()
+        {
+            var tripsMock = GlobalVariables.GetTrips().AsDbSetMock();
+            var stopsMock = GlobalVariables.GetStops().AsDbSetMock();
+
+            var worldTripDbContextMock = CreateDbContext(tripsMock, stopsMock);
+            return worldTripDbContextMock.Object;
+        }
+
+        public static WorldTripDbContext InitContextWithCreate()
+        {
+            var tripsMock = GlobalVariables.GetTrips().AsDbSetMockWithCreate();
+            var stopsMock = GlobalVariables.GetStops().AsDbSetMockWithCreate();
+            var worldTripDbContextMock = CreateDbContext(tripsMock, stopsMock);
+            return worldTripDbContextMock.Object;
+        }
     }
 }
