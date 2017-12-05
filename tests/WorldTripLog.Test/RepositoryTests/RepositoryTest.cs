@@ -316,6 +316,27 @@ namespace WorldTripLog.Test.RepositoryTest
                 Assert.Equal(contextTrip.Stops, trip.Stops);
             }
         }
+
+        public class GetCountAsyncTests
+        {
+            private readonly Repository<WorldTripDbContext> _repository;
+            private readonly WorldTripDbContext _context;
+
+            public GetCountAsyncTests()
+            {
+                _context = ContextHelpers.InitContext();
+                _repository = new Repository<WorldTripDbContext>(_context);
+            }
+
+            [Fact]
+            public async void WithFilter()
+            {
+                Expression<Func<Trip, bool>> filter = (t) => t.Name.Contains("Tour of");
+                var noOfTrips = await _repository.GetCountAsync<Trip>(filter: filter);
+                Assert.NotEqual(0, noOfTrips);
+                Assert.Equal(_context.Trips.Where(filter).Count(), noOfTrips);
+            }
+        }
         public class GetByIdAsyncTests
         {
             private readonly Repository<WorldTripDbContext> _repository;
