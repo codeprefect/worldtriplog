@@ -28,7 +28,7 @@ namespace WorldTripLog.Web.Services
                 Message = "failed to get coordinates"
             };
 
-            var apiKey = _config["Bing_Key"];
+            var apiKey = _config["BingMap:Key"];
             var encodedName = WebUtility.UrlEncode(name);
             var url = $"http://dev.virtualearth.net/REST/v1/Locations?q={encodedName}&key={apiKey}";
 
