@@ -337,6 +337,35 @@ namespace WorldTripLog.Test.RepositoryTest
                 Assert.Equal(_context.Trips.Where(filter).Count(), noOfTrips);
             }
         }
+
+        public class GetExistsAsyncTests
+        {
+            private readonly Repository<WorldTripDbContext> _repository;
+            private readonly WorldTripDbContext _context;
+
+            public GetExistsAsyncTests()
+            {
+                _context = ContextHelpers.InitContext();
+                _repository = new Repository<WorldTripDbContext>(_context);
+            }
+
+            [Fact]
+            public async void WithFilter()
+            {
+                Expression<Func<Trip, bool>> filter = (t) => t.Name == "Tope";
+                var tripExists = await _repository.GetExistsAsync<Trip>(filter: filter);
+                Assert.Equal(false, tripExists);
+
+                filter = (t) => t.Name.Contains("Tour");
+                tripExists = await _repository.GetExistsAsync<Trip>(filter: filter);
+                Assert.Equal(true, tripExists);
+
+                filter = (t) => t.Id == 4;
+                tripExists = await _repository.GetExistsAsync<Trip>(filter: filter);
+                Assert.Equal(false, tripExists);
+            }
+        }
+
         public class GetByIdAsyncTests
         {
             private readonly Repository<WorldTripDbContext> _repository;
