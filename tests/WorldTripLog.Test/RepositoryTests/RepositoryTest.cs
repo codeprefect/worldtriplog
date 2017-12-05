@@ -273,6 +273,49 @@ namespace WorldTripLog.Test.RepositoryTest
             }
         }
 
+        public class GetFirstAsyncTests
+        {
+            private readonly Repository<WorldTripDbContext> _repository;
+            private readonly WorldTripDbContext _context;
+
+            public GetFirstAsyncTests()
+            {
+                _context = ContextHelpers.InitContext();
+                _repository = new Repository<WorldTripDbContext>(_context);
+            }
+
+            [Fact]
+            public async void WithFilter()
+            {
+                Expression<Func<Trip, bool>> filter = (t) => t.Name.Contains("Tour of");
+                var trip = await _repository.GetFirstAsync<Trip>(filter: filter);
+                Assert.NotNull(trip);
+                Assert.Equal(_context.Trips.Where(filter).FirstOrDefault(), trip);
+                Assert.NotEqual(_context.Trips.Where(filter).LastOrDefault(), trip);
+            }
+
+            [Fact]
+            public async void WithFilterAndOrderBy()
+            {
+                Expression<Func<Trip, bool>> filter = (t) => t.Name.Contains("Tour of");
+                Func<IQueryable<Trip>, IOrderedQueryable<Trip>> orderBy = (t) => t.OrderByDescending(tr => tr.Id);
+                var trip = await _repository.GetFirstAsync<Trip>(filter: filter, orderBy: orderBy);
+                Assert.NotNull(trip);
+                Assert.NotEqual(_context.Trips.Where(filter).FirstOrDefault(), trip);
+                Assert.Equal(_context.Trips.Where(filter).OrderByDescending(tr => tr.Id).FirstOrDefault(), trip);
+            }
+
+            [Fact]
+            public async void WithIncludeProperties()
+            {
+                Expression<Func<Trip, bool>> filter = (t) => t.Name == "Tour of Europe";
+                var trip = await _repository.GetFirstAsync<Trip>(filter: filter, includeProperties: "Stops");
+                var contextTrip = _context.Trips.Where(filter).FirstOrDefault();
+                Assert.NotNull(trip.Stops);
+                Assert.Equal(contextTrip.Stops.Count(), trip.Stops.Count());
+                Assert.Equal(contextTrip.Stops, trip.Stops);
+            }
+        }
         public class GetByIdAsyncTests
         {
             private readonly Repository<WorldTripDbContext> _repository;
