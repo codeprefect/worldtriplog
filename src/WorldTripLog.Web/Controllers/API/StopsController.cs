@@ -56,7 +56,7 @@ namespace WorldTripLog.Web.Controllers.Api
                 Expression<Func<Stop, bool>> filter = s => s.TripID == TripID && s.CreatedBy == UserID;
 
                 var stops = await _stops.GetAsync(filter: filter);
-                return stops.Any() ? Ok(stops.ToVModel()) : throw new InvalidOperationException(message: "current user has not trips yet");
+                return stops.Any() ? Ok((stops.Select(Mappings.ToStopVModel))) : throw new InvalidOperationException(message: "current user has not trips yet");
             }
             catch (Exception ex)
             {
@@ -91,7 +91,7 @@ namespace WorldTripLog.Web.Controllers.Api
                 Expression<Func<Stop, bool>> filterOne = (s) => s.TripID == TripID && s.CreatedBy == UserID && s.Id == id;
 
                 var stop = await _stops.GetOneAsync(filter: filterOne);
-                return stop != null ? Ok(stop.ToVModel()) : throw new InvalidOperationException(message: "invalid tripID and stopID combination");
+                return stop != null ? Ok(Mappings.ToStopVModel(stop)) : throw new InvalidOperationException(message: "invalid tripID and stopID combination");
             }
             catch (Exception ex)
             {
@@ -125,10 +125,10 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 try
                 {
-                    var _stop = await _coordService.AddGeoCoords(stop.ToModel());
+                    var _stop = await _coordService.AddGeoCoords(Mappings.ToStopModel(stop));
                     _stop.TripID = TripID;
                     await _stops.Create(_stop, UserID);
-                    return Created($"/api/trips/{TripID}/stops", _stop.ToVModel());
+                    return Created($"/api/trips/{TripID}/stops", Mappings.ToStopVModel(_stop));
                 }
                 catch (Exception e)
                 {
@@ -168,7 +168,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 try
                 {
-                    await _stops.Update(stop.ToModel(), UserID);
+                    await _stops.Update(Mappings.ToStopModel(stop), UserID);
                     return Created($"/api/trips/{TripID}/stops/{stop.Id}", stop);
                 }
                 catch (Exception e)
