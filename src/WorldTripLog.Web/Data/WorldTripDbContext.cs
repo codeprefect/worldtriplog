@@ -17,9 +17,11 @@ namespace WorldTripLog.Web.Data
 
         }
 
-        public DbSet<Trip> Trips { get; set; }
+        public WorldTripDbContext() { }
 
-        public DbSet<Stop> Stops { get; set; }
+        public virtual DbSet<Trip> Trips { get; set; }
+
+        public virtual DbSet<Stop> Stops { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

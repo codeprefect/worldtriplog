@@ -55,7 +55,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 Expression<Func<Trip, bool>> filter = t => t.CreatedBy == UserID;
                 var trips = await _trips.GetAsync(filter: filter);
-                return trips.Any() ? Ok(trips.ToVModel()) : throw new InvalidOperationException(message: "no trips yet");
+                return trips.Any() ? Ok(trips.Select(Mappings.ToTripVModel)) : throw new InvalidOperationException(message: "no trips yet");
             }
             catch (Exception ex)
             {
@@ -87,7 +87,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 Expression<Func<Trip, bool>> filter = t => t.CreatedBy == UserID && t.Id == id;
                 var trip = await _trips.GetOneAsync(filter: filter);
-                return trip != null ? Ok(trip.ToVModel()) : throw new InvalidOperationException(message: $"trip with id: {id} does not exist");
+                return trip != null ? Ok(Mappings.ToTripVModel(trip)) : throw new InvalidOperationException(message: $"trip with id: {id} does not exist");
             }
             catch (Exception ex)
             {
@@ -119,8 +119,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 try
                 {
-                    _trips.Create(trip.ToModel(), UserID);
-                    await _trips.SaveAsync();
+                    await _trips.Create(Mappings.ToTripModel(trip), UserID);
                     return Created("/api/trips", trip);
                 }
                 catch (Exception e)
@@ -162,8 +161,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 try
                 {
-                    _trips.Update(trip.ToModel(), UserID);
-                    await _trips.SaveAsync();
+                    await _trips.Update(Mappings.ToTripModel(trip), UserID);
                     return Ok(trip);
                 }
                 catch (Exception e)
@@ -205,8 +203,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 try
                 {
-                    _trips.Delete(id);
-                    await _trips.SaveAsync();
+                    await _trips.Delete(id);
                     return Ok($"Deleted Successfully");
                 }
                 catch (Exception e)
