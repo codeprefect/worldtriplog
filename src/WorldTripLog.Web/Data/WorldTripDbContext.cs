@@ -23,11 +23,6 @@ namespace WorldTripLog.Web.Data
 
         public virtual DbSet<Stop> Stops { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-        }
-
         public override int SaveChanges()
         {
             var validationErrors = ChangeTracker
@@ -42,7 +37,7 @@ namespace WorldTripLog.Web.Data
             if (validationErrors.Any())
             {
                 // Possibly throw an exception here
-                throw new DbEntityValidationException(fullErrorMessage, null);
+                throw new DbEntityValidationException(exceptionMessage, null);
             }
 
             return base.SaveChanges();

@@ -120,7 +120,7 @@ namespace WorldTripLog.Web.Controllers.Api
                 try
                 {
                     await _trips.Create(Mappings.ToTripModel(trip), UserID);
-                    return Created("/api/trips", trip);
+                    return Created(Request.Path.Value, trip);
                 }
                 catch (Exception e)
                 {

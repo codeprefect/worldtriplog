@@ -51,7 +51,6 @@ namespace WorldTripLog.Web
                 options.Cookie.Path = "/";
                 options.Cookie.HttpOnly = false;
                 options.Cookie.SameSite = SameSiteMode.Lax;
-                //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.SlidingExpiration = true;
                 options.Events.OnRedirectToLogin = async ctx =>
                 {

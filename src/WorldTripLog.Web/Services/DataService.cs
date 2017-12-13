@@ -20,12 +20,12 @@ namespace WorldTripLog.Web.Services
 
         #region just all the getters
 
-        public Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, string includeProperties, int? skip, int? take)
+        public Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = null, int? skip = null, int? take = null)
         {
             return _repository.GetAsync<TEntity>(filter, orderBy, includeProperties, skip, take);
         }
 
-        public Task<IEnumerable<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, string includeProperties, int? skip, int? take)
+        public Task<IEnumerable<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = null, int? skip = null, int? take = null)
         {
             return _repository.GetAllAsync<TEntity>(orderBy, includeProperties, skip, take);
         }
@@ -45,12 +45,12 @@ namespace WorldTripLog.Web.Services
             return _repository.GetExistsAsync<TEntity>(filter);
         }
 
-        public Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, string includeProperties)
+        public Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = null)
         {
             return _repository.GetFirstAsync<TEntity>(filter, orderBy, includeProperties);
         }
 
-        public Task<TEntity> GetOneAsync(Expression<Func<TEntity, bool>> filter, string includeProperties)
+        public Task<TEntity> GetOneAsync(Expression<Func<TEntity, bool>> filter = null, string includeProperties = null)
         {
             return _repository.GetOneAsync<TEntity>(filter, includeProperties);
         }
