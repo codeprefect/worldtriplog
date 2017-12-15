@@ -17,6 +17,9 @@ using WorldTripLog.Data.Repositories;
 using WorldTripLog.Web.Models;
 using WorldTripLog.Web.Data;
 using WorldTripLog.Web.Services;
+using WorldTripLog.Domain.Entities;
+using System.Net;
+using Newtonsoft.Json;
 
 namespace WorldTripLog.Web
 {
@@ -47,7 +50,10 @@ namespace WorldTripLog.Web
                 .AddEntityFrameworkStores<WorldTripDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddAuthentication()
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "Identity.Application";
+            })
                 .ConfigureJwtAuth(_configuration);
 
             services.ConfigureApplicationCookie(options =>
@@ -61,12 +67,14 @@ namespace WorldTripLog.Web
                 {
                     if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
                     {
-                        ctx.Response.StatusCode = 401;
+                        ctx.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        //await ctx.Response.WriteAsync(JsonConvert.SerializeObject(new ErrorMessage(ctx.Response.StatusCode, "unauthorized request")));
                     }
                     else
                     {
                         ctx.Response.Redirect(ctx.RedirectUri);
                     }
+
                     await Task.Yield();
                 };
             });
@@ -75,7 +83,7 @@ namespace WorldTripLog.Web
             {
                 options.AddPolicy("Authenticated", policy =>
                 {
-                    policy.AddAuthenticationSchemes("Identity.Application", "Bearer")
+                    policy.AddAuthenticationSchemes("Identity.Application", "JwtBearer")
                         .RequireAuthenticatedUser()
                         .Build();
                 });
@@ -115,7 +123,7 @@ namespace WorldTripLog.Web
 
             app.UseSwagger();
 
-            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "WorldTripLog API v1"));
+            app.UseSwaggerUI(options => options.SwaggerEndpoint(_configuration["Swagger:Url"], "WorldTripLog API v1"));
 
             app.UseMvc(routes =>
             {
