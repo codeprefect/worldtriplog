@@ -58,7 +58,7 @@ namespace WorldTripLog.Web.Services
         #endregion end of getters
 
         #region create, update, delete and save
-        public Task Create(TEntity entity, string createdBy)
+        public Task Create(TEntity entity, string createdBy = null)
         {
             _repository.Create<TEntity>(entity, createdBy);
             return _repository.SaveAsync();
@@ -76,7 +76,7 @@ namespace WorldTripLog.Web.Services
             return _repository.SaveAsync();
         }
 
-        public Task Update(TEntity entity, string modifiedBy)
+        public Task Update(TEntity entity, string modifiedBy = null)
         {
             _repository.Update<TEntity>(entity, modifiedBy);
             return _repository.SaveAsync();

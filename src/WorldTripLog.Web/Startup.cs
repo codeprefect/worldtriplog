@@ -22,7 +22,12 @@ namespace WorldTripLog.Web
 {
     public class Startup
     {
-        public IConfiguration _configuration;
+        private IConfiguration _configuration;
+
+        public IConfiguration Configuration
+        {
+            get => _configuration;
+        }
 
         public Startup(IConfiguration configuration)
         {
