@@ -11,8 +11,8 @@ namespace WorldTripLog.Web.Services
 {
     public class GeoCoordsService
     {
-        private ILogger<GeoCoordsService> _logger;
-        private IConfiguration _config;
+        private readonly ILogger<GeoCoordsService> _logger;
+        private readonly IConfiguration _config;
 
         public GeoCoordsService(ILogger<GeoCoordsService> logger, IConfiguration config)
         {

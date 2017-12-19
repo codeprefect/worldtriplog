@@ -19,10 +19,10 @@ namespace WorldTripLog.Web.Controllers
     [Route("/Token")]
     public class TokenController : Controller
     {
-        private SignInManager<WorldTripUser> _signInManager;
-        private ILogger<TokenController> _logger;
-        private UserManager<WorldTripUser> _userManager;
-        private IConfiguration _config;
+        private readonly SignInManager<WorldTripUser> _signInManager;
+        private readonly ILogger<TokenController> _logger;
+        private readonly UserManager<WorldTripUser> _userManager;
+        private readonly IConfiguration _config;
 
         public TokenController(SignInManager<WorldTripUser> signInManager, ILogger<TokenController> logger, UserManager<WorldTripUser> userManager, IConfiguration config)
         {

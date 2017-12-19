@@ -69,7 +69,7 @@ namespace WorldTripLog.Data.Repositories
 
         public virtual async Task<TEntity> GetOneAsync<TEntity>(
             Expression<Func<TEntity, bool>> filter = null,
-            string includeProperties = "")
+            string includeProperties = null)
             where TEntity : class, IEntity
         {
             return await GetQueryable<TEntity>(filter, null, includeProperties).SingleOrDefaultAsync();
@@ -78,7 +78,7 @@ namespace WorldTripLog.Data.Repositories
         public virtual async Task<TEntity> GetFirstAsync<TEntity>(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            string includeProperties = "")
+            string includeProperties = null)
             where TEntity : class, IEntity
         {
             return await GetQueryable<TEntity>(filter, orderBy, includeProperties).FirstOrDefaultAsync();

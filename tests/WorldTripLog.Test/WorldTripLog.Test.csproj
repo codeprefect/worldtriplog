@@ -15,4 +15,9 @@
     <ProjectReference Include="..\..\src\WorldTripLog.Data\WorldTripLog.Data.csproj" />
     <ProjectReference Include="..\..\src\WorldTripLog.Web\WorldTripLog.Web.csproj" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <!-- Mark the project as being a test project -->
+    <SonarQubeTestProject>true</SonarQubeTestProject>
+</PropertyGroup>
 </Project>

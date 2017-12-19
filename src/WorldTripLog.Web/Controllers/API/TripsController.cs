@@ -55,14 +55,12 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 Expression<Func<Trip, bool>> filter = t => t.CreatedBy == UserID;
                 var trips = await _trips.GetAsync(filter: filter);
-                return trips.Any() ? Ok(trips.Select(Mappings.ToTripVModel)) : throw new InvalidOperationException(message: "no trips yet");
+                return trips.Any() ? Ok(trips.Select(Mappings.ToTripVModel)) : throw new InvalidOperationException(message: $"current user {UserID} has no trips yet");
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return StatusCode(500, new ErrorMessage
-                {
-                    reasons = { ex.Message }
-                });
+                _logger.LogError(e, $"failed to execute GET: {e.Message}");
+                return StatusCode(500, new ErrorMessage(500, e.Message));
             }
         }
 
@@ -89,12 +87,10 @@ namespace WorldTripLog.Web.Controllers.Api
                 var trip = await _trips.GetOneAsync(filter: filter);
                 return trip != null ? Ok(Mappings.ToTripVModel(trip)) : throw new InvalidOperationException(message: $"trip with id: {id} does not exist");
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return StatusCode(500, new ErrorMessage
-                {
-                    reasons = { ex.Message }
-                });
+                _logger.LogError(e, $"trip:{id} doesn't exist or doesn't belong to {UserID}");
+                return StatusCode(500, new ErrorMessage(500, e.Message));
             }
         }
 
@@ -120,23 +116,19 @@ namespace WorldTripLog.Web.Controllers.Api
                 try
                 {
                     await _trips.Create(Mappings.ToTripModel(trip), UserID);
-                    return Created("/api/trips", trip);
+                    _logger.LogInformation($"{UserID} created a new trip");
+                    return Created(Request.Path.Value, trip);
                 }
                 catch (Exception e)
                 {
-                    return StatusCode(500, new ErrorMessage
-                    {
-                        message = "trip creation failed",
-                        reasons = { e.Message }
-                    });
+                    _logger.LogError(e, $"{UserID} failed to create a new trip");
+                    return StatusCode(500, new ErrorMessage(500, $"trip creation failed, {e.Message}"));
                 }
             }
             else
             {
-                return StatusCode(500, new ErrorMessage
-                {
-                    reasons = ModelState.ToStringResponse()
-                });
+                _logger.LogError("invalid trip model");
+                return StatusCode(500, new ErrorMessage(500, string.Join(", ", ModelState.ToStringResponse().ToArray())));
             }
         }
 
@@ -162,23 +154,19 @@ namespace WorldTripLog.Web.Controllers.Api
                 try
                 {
                     await _trips.Update(Mappings.ToTripModel(trip), UserID);
+                    _logger.LogInformation($"{UserID} modified an existing trip: {trip.Id}");
                     return Ok(trip);
                 }
                 catch (Exception e)
                 {
-                    return StatusCode(500, new ErrorMessage
-                    {
-                        message = "trip update failed",
-                        reasons = { e.Message }
-                    });
+                    _logger.LogError(e, $"{UserID} failed in modifying an existing trip: {trip.Id}");
+                    return StatusCode(500, new ErrorMessage(500, $"trip update failed, {e.Message}"));
                 }
             }
             else
             {
-                return StatusCode(500, new ErrorMessage
-                {
-                    reasons = ModelState.ToStringResponse()
-                });
+                _logger.LogError($"input trip is not valid");
+                return StatusCode(500, new ErrorMessage(500, string.Join(", ", ModelState.ToStringResponse().ToArray())));
             }
         }
 
@@ -204,23 +192,19 @@ namespace WorldTripLog.Web.Controllers.Api
                 try
                 {
                     await _trips.Delete(id);
+                    _logger.LogInformation($"trip: {id} deleted successfully by {UserID}");
                     return Ok($"Deleted Successfully");
                 }
                 catch (Exception e)
                 {
-                    return StatusCode(500, new ErrorMessage
-                    {
-                        reasons = { e.Message }
-                    });
+                    _logger.LogError(e, $"delete for trip: {id} failed");
+                    return StatusCode(500, new ErrorMessage(500, e.Message));
                 }
             }
             else
             {
-                return StatusCode(500, new ErrorMessage
-                {
-                    message = "invalid id",
-                    reasons = { "id must be greater than 0" }
-                });
+                _logger.LogError($"invalid trip id: {id}");
+                return StatusCode(500, new ErrorMessage(500, "invalid id, id must be greater than 0"));
             }
         }
     }

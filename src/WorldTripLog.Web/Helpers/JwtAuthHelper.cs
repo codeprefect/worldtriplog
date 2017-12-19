@@ -22,7 +22,7 @@ namespace WorldTripLog.Web
                 ValidAudience = config["Tokens:Audience"],
             };
 
-            return auth.AddJwtBearer("Bearer", options =>
+            return auth.AddJwtBearer("JwtBearer", options =>
             {
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
