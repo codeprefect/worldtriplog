@@ -22,15 +22,17 @@ namespace WorldTripLog.Web.Controllers.Api
     {
         private readonly ILogger<StopsController> _logger;
 
-        public IDataService<WorldTripDbContext, Stop> _stops { get; }
+        private readonly IDataService<WorldTripDbContext, Stop> _stops;
 
         private readonly GeoCoordsService _coordService;
+        private readonly int _tripID;
 
         public StopsController(ILogger<StopsController> logger, IDataService<WorldTripDbContext, Stop> stops, GeoCoordsService coordService)
         {
             _logger = logger;
             _stops = stops;
             _coordService = coordService;
+            _tripID = Convert.ToInt32(RouteData.Values["tripID"]);
         }
 
         /// <summary>
@@ -53,18 +55,15 @@ namespace WorldTripLog.Web.Controllers.Api
         {
             try
             {
-                Expression<Func<Stop, bool>> filter = s => s.TripID == TripID && s.CreatedBy == UserID;
+                Expression<Func<Stop, bool>> filter = s => s.TripID == _tripID && s.CreatedBy == UserID;
 
                 var stops = await _stops.GetAsync(filter: filter);
-                return stops.Any() ? Ok((stops.Select(Mappings.ToStopVModel))) : throw new InvalidOperationException(message: "current user has not trips yet");
+                return stops.Any() ? Ok((stops.Select(Mappings.ToStopVModel))) : throw new InvalidOperationException(message: $"current trip: {_tripID} has not stops yet");
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                _logger.LogError($"failed to execute GET: {ex.Message}");
-                return StatusCode(500, new ErrorMessage
-                {
-                    reasons = { ex.Message }
-                });
+                _logger.LogError($"failed to execute GET: {e.Message}");
+                return StatusCode(500, new ErrorMessage(500, e.Message));
             }
         }
 
@@ -88,18 +87,15 @@ namespace WorldTripLog.Web.Controllers.Api
         {
             try
             {
-                Expression<Func<Stop, bool>> filterOne = (s) => s.TripID == TripID && s.CreatedBy == UserID && s.Id == id;
+                Expression<Func<Stop, bool>> filterOne = (s) => s.TripID == _tripID && s.CreatedBy == UserID && s.Id == id;
 
                 var stop = await _stops.GetOneAsync(filter: filterOne);
-                return stop != null ? Ok(Mappings.ToStopVModel(stop)) : throw new InvalidOperationException(message: "invalid tripID and stopID combination");
+                return stop != null ? Ok(Mappings.ToStopVModel(stop)) : throw new InvalidOperationException(message: $"invalid trip: {_tripID} and stop: {id} combination");
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                _logger.LogError($"failed to get stop: ${ ex.Message}");
-                return StatusCode(500, new ErrorMessage
-                {
-                    reasons = { ex.Message }
-                });
+                _logger.LogError($"failed to get stop: { e.Message}");
+                return StatusCode(500, new ErrorMessage(500, e.Message));
             }
         }
 
@@ -126,24 +122,21 @@ namespace WorldTripLog.Web.Controllers.Api
                 try
                 {
                     var _stop = await _coordService.AddGeoCoords(Mappings.ToStopModel(stop));
-                    _stop.TripID = TripID;
+                    _stop.TripID = _tripID;
                     await _stops.Create(_stop, UserID);
-                    return Created($"/api/trips/{TripID}/stops", Mappings.ToStopVModel(_stop));
+                    _logger.LogInformation($"{UserID} created a new stop on trip: {_tripID}");
+                    return Created(Request.Path.Value, Mappings.ToStopVModel(_stop));
                 }
                 catch (Exception e)
                 {
-                    return StatusCode(500, new ErrorMessage
-                    {
-                        reasons = { $"stop creation failed due to: {e.Message}" }
-                    });
+                    _logger.LogError(e, $"{UserID} failed to create a new stop on trip: {_tripID}");
+                    return StatusCode(500, new ErrorMessage(500, $"stop creation failed due to: {e.Message}"));
                 }
             }
             else
             {
-                return StatusCode(500, new ErrorMessage
-                {
-                    reasons = ModelState.ToStringResponse()
-                });
+                _logger.LogError("invalid stop model");
+                return StatusCode(500, new ErrorMessage(500, string.Join(", ", ModelState.ToStringResponse().ToArray())));
             }
         }
 
@@ -169,22 +162,19 @@ namespace WorldTripLog.Web.Controllers.Api
                 try
                 {
                     await _stops.Update(Mappings.ToStopModel(stop), UserID);
-                    return Created($"/api/trips/{TripID}/stops/{stop.Id}", stop);
+                    _logger.LogInformation($"{UserID} modified an existing stop: {stop.Id} on trip: {_tripID}");
+                    return Created(Request.Path.Value, stop);
                 }
                 catch (Exception e)
                 {
-                    return StatusCode(500, new ErrorMessage
-                    {
-                        reasons = { $"stop update failed due to: {e.Message}" }
-                    });
+                    _logger.LogError(e, $"{UserID} failed in modifying an existing stop: {stop.Id} on trip: {_tripID}");
+                    return StatusCode(500, new ErrorMessage(500, $"stop update failed due to: {e.Message}"));
                 }
             }
             else
             {
-                return StatusCode(500, new ErrorMessage
-                {
-                    reasons = ModelState.ToStringResponse()
-                });
+                _logger.LogError($"input stop is not valid");
+                return StatusCode(500, new ErrorMessage(500, string.Join(", ", ModelState.ToStringResponse().ToArray())));
             }
         }
 
@@ -210,32 +200,20 @@ namespace WorldTripLog.Web.Controllers.Api
                 try
                 {
                     await _stops.Delete(id);
+                    _logger.LogInformation($"stop: {id} deleted successfully by {UserID}");
                     return Ok($"Deleted Successfully");
                 }
                 catch (Exception e)
                 {
-                    return StatusCode(500, new ErrorMessage
-                    {
-                        message = "Stop deletion failed",
-                        reasons = { e.Message }
-                    });
+                    _logger.LogError(e, $"delete for stop: {id} failed");
+                    return StatusCode(500, new ErrorMessage(500, "Stop deletion failed {e.Message}"));
                 }
             }
             else
             {
-                return StatusCode(500, new ErrorMessage
-                {
-                    reasons = { $"invalid stop id: {id}" }
-                });
+                _logger.LogError($"invalid stop id: {id}");
+                return StatusCode(500, new ErrorMessage(500, $"invalid stop id: {id}"));
             }
         }
-
-        #region helpers
-        private int TripID
-        {
-            get => Convert.ToInt32(RouteData.Values["tripID"]);
-        }
-
-        #endregion
     }
 }

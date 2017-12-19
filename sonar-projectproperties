@@ -1,0 +1,25 @@
+# must be unique in a given SonarQube instance
+sonar.projectKey=wt1ng
+# this is the name and version displayed in the SonarQube UI. Was mandatory prior to SonarQube 6.1.
+sonar.projectName=WorldTripLog
+sonar.projectVersion=1.0
+
+sonar.sources=.
+sonar.languages=cs
+sonar.visualstudio.solution.file=WorldTripLog.sln
+sonar.inclusions=src/**/*.cs,src/**/*.csproj
+
+sonar.sourceEncoding=UTF-8
+
+#Core C# Settings sonar.dotnet.visualstudio.solution.file=MySonarProject.sln
+sonar.dotnet.4.0.sdk.directory=C:/Windows/Microsoft.NET/Framework/v4.0.30319
+sonar.dotnet.version=4.0
+sonar.donet.visualstudio.testProjectPattern=tests/*.Test*
+sonar.dotnet.excludeGeneratedCode=true
+# sonar.tests=tests
+
+sonar.exclusions=*lib/**/*,*lib/*,**/obj/*.cs,**/bin/*.cs,**/obj/**/*.cs,**/bin/**/*.xml,**/obj/**/*.cs,**/bin/**/*.xml
+
+SonarQube.Scanner.MSBuild.exe begin /k:wt1ng /d:sonar.exclusions=**/lib/**/*,**lib/*,**/Migrations/*
+MSBuild.exe /t:Rebuild
+SonarQube.Scanner.MSBuild.exe end

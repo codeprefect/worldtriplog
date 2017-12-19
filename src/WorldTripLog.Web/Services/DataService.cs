@@ -20,12 +20,12 @@ namespace WorldTripLog.Web.Services
 
         #region just all the getters
 
-        public Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, string includeProperties, int? skip, int? take)
+        public Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = null, int? skip = null, int? take = null)
         {
             return _repository.GetAsync<TEntity>(filter, orderBy, includeProperties, skip, take);
         }
 
-        public Task<IEnumerable<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, string includeProperties, int? skip, int? take)
+        public Task<IEnumerable<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = null, int? skip = null, int? take = null)
         {
             return _repository.GetAllAsync<TEntity>(orderBy, includeProperties, skip, take);
         }
@@ -45,12 +45,12 @@ namespace WorldTripLog.Web.Services
             return _repository.GetExistsAsync<TEntity>(filter);
         }
 
-        public Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy, string includeProperties)
+        public Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = null)
         {
             return _repository.GetFirstAsync<TEntity>(filter, orderBy, includeProperties);
         }
 
-        public Task<TEntity> GetOneAsync(Expression<Func<TEntity, bool>> filter, string includeProperties)
+        public Task<TEntity> GetOneAsync(Expression<Func<TEntity, bool>> filter = null, string includeProperties = null)
         {
             return _repository.GetOneAsync<TEntity>(filter, includeProperties);
         }
@@ -58,7 +58,7 @@ namespace WorldTripLog.Web.Services
         #endregion end of getters
 
         #region create, update, delete and save
-        public Task Create(TEntity entity, string createdBy)
+        public Task Create(TEntity entity, string createdBy = null)
         {
             _repository.Create<TEntity>(entity, createdBy);
             return _repository.SaveAsync();
@@ -76,7 +76,7 @@ namespace WorldTripLog.Web.Services
             return _repository.SaveAsync();
         }
 
-        public Task Update(TEntity entity, string modifiedBy)
+        public Task Update(TEntity entity, string modifiedBy = null)
         {
             _repository.Update<TEntity>(entity, modifiedBy);
             return _repository.SaveAsync();

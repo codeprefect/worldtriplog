@@ -11,7 +11,7 @@ namespace WorldTripLog.Web.Controllers.Api
     {
 
         #region some helpers
-        protected string UserID { get => User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()?.Value; }
+        protected string UserID => User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
 
         #endregion
     }

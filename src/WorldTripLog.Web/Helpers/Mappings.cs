@@ -11,7 +11,7 @@ namespace WorldTripLog.Web.Helpers
     {
         #region trip mapping helpers
 
-        public static Func<Trip, TripVModel> ToTripVModel = (trip) =>
+        public readonly static Func<Trip, TripVModel> ToTripVModel = (trip) =>
         {
             return new TripVModel
             {
@@ -21,7 +21,7 @@ namespace WorldTripLog.Web.Helpers
             };
         };
 
-        public static Func<TripVModel, Trip> ToTripModel = (trip) =>
+        public readonly static Func<TripVModel, Trip> ToTripModel = (trip) =>
         {
             return new Trip
             {
@@ -33,7 +33,7 @@ namespace WorldTripLog.Web.Helpers
         #endregion trip mappings
 
         #region stop mapping helpers
-        public static Func<Stop, StopVModel> ToStopVModel = (stop) =>
+        public readonly static Func<Stop, StopVModel> ToStopVModel = (stop) =>
         {
             return new StopVModel
             {
@@ -46,7 +46,7 @@ namespace WorldTripLog.Web.Helpers
             };
         };
 
-        public static Func<StopVModel, Stop> ToStopModel = (stop) =>
+        public readonly static Func<StopVModel, Stop> ToStopModel = (stop) =>
         {
             return new Stop
             {
