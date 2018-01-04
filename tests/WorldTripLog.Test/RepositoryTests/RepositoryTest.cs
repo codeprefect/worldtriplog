@@ -18,7 +18,7 @@ namespace WorldTripLog.Test.RepositoryTest
     {
         public class GetAllAsyncTests
         {
-            private readonly Repository<WorldTripDbContext> _repository;
+            private readonly IRepository<WorldTripDbContext> _repository;
             private readonly WorldTripDbContext _context;
 
             public GetAllAsyncTests()
@@ -124,7 +124,7 @@ namespace WorldTripLog.Test.RepositoryTest
 
         public class GetAsyncTests
         {
-            private readonly Repository<WorldTripDbContext> _repository;
+            private readonly IRepository<WorldTripDbContext> _repository;
             private readonly WorldTripDbContext _context;
 
             public GetAsyncTests()
@@ -239,7 +239,7 @@ namespace WorldTripLog.Test.RepositoryTest
 
         public class GetOneAsyncTests
         {
-            private readonly Repository<WorldTripDbContext> _repository;
+            private readonly IRepository<WorldTripDbContext> _repository;
             private readonly WorldTripDbContext _context;
 
             public GetOneAsyncTests()
@@ -275,7 +275,7 @@ namespace WorldTripLog.Test.RepositoryTest
 
         public class GetFirstAsyncTests
         {
-            private readonly Repository<WorldTripDbContext> _repository;
+            private readonly IRepository<WorldTripDbContext> _repository;
             private readonly WorldTripDbContext _context;
 
             public GetFirstAsyncTests()
@@ -319,7 +319,7 @@ namespace WorldTripLog.Test.RepositoryTest
 
         public class GetCountAsyncTests
         {
-            private readonly Repository<WorldTripDbContext> _repository;
+            private readonly IRepository<WorldTripDbContext> _repository;
             private readonly WorldTripDbContext _context;
 
             public GetCountAsyncTests()
@@ -340,7 +340,7 @@ namespace WorldTripLog.Test.RepositoryTest
 
         public class GetExistsAsyncTests
         {
-            private readonly Repository<WorldTripDbContext> _repository;
+            private readonly IRepository<WorldTripDbContext> _repository;
             private readonly WorldTripDbContext _context;
 
             public GetExistsAsyncTests()
@@ -368,7 +368,7 @@ namespace WorldTripLog.Test.RepositoryTest
 
         public class GetByIdAsyncTests
         {
-            private readonly Repository<WorldTripDbContext> _repository;
+            private readonly IRepository<WorldTripDbContext> _repository;
             private readonly WorldTripDbContext _context;
 
             public GetByIdAsyncTests()
@@ -394,7 +394,7 @@ namespace WorldTripLog.Test.RepositoryTest
 
         public class CreateTests
         {
-            private readonly Repository<WorldTripDbContext> _repository;
+            private readonly IRepository<WorldTripDbContext> _repository;
             private readonly WorldTripDbContext _context;
 
             public CreateTests()
