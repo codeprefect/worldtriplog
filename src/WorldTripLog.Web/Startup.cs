@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -90,7 +90,8 @@ namespace WorldTripLog.Web
             });
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped(typeof(IDataService<,>), typeof(DataService<,>));
+            services.AddScoped(typeof(IDataService<WorldTripDbContext, Trip>), typeof(TripService));
+            services.AddScoped(typeof(IDataService<WorldTripDbContext, Stop>), typeof(StopService));
             services.AddTransient<GeoCoordsService>();
 
             services.AddMvc();

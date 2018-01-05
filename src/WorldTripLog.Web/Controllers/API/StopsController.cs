@@ -25,14 +25,12 @@ namespace WorldTripLog.Web.Controllers.Api
         private readonly IDataService<WorldTripDbContext, Stop> _stops;
 
         private readonly GeoCoordsService _coordService;
-        private readonly int _tripID;
 
         public StopsController(ILogger<StopsController> logger, IDataService<WorldTripDbContext, Stop> stops, GeoCoordsService coordService)
         {
             _logger = logger;
             _stops = stops;
             _coordService = coordService;
-            _tripID = Convert.ToInt32(RouteData.Values["tripID"]);
         }
 
         /// <summary>
@@ -215,5 +213,13 @@ namespace WorldTripLog.Web.Controllers.Api
                 return StatusCode(500, new ErrorMessage(500, $"invalid stop id: {id}"));
             }
         }
+
+        #region helpers
+        private int _tripID
+        {
+            get => Convert.ToInt32(RouteData.Values["tripID"]);
+        }
+
+        #endregion
     }
 }
