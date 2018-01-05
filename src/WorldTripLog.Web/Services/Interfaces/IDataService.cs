@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using WorldTripLog.Domain.Interfaces;
 
-namespace WorldTripLog.Web.Services
+namespace WorldTripLog.Web.Services.Interfaces
 {
     public interface IDataService<TContext, TEntity>
     {

@@ -8,6 +8,7 @@ using WorldTripLog.Data.Interfaces;
 using WorldTripLog.Domain.Entities;
 using WorldTripLog.Domain.Interfaces;
 using WorldTripLog.Web.Data;
+using WorldTripLog.Web.Services.Interfaces;
 
 namespace WorldTripLog.Web.Services
 {
@@ -22,9 +23,11 @@ namespace WorldTripLog.Web.Services
 
         #region just all the getters
 
-        public Task<IEnumerable<Trip>> GetAsync(Expression<Func<Trip, bool>> filter, Func<IQueryable<Trip>, IOrderedQueryable<Trip>> orderBy = null, string includeProperties = null, int? skip = null, int? take = null)
+        public async Task<IEnumerable<Trip>> GetAsync(Expression<Func<Trip, bool>> filter, Func<IQueryable<Trip>, IOrderedQueryable<Trip>> orderBy = null, string includeProperties = null, int? skip = null, int? take = null)
         {
-            return _repository.GetAsync<Trip>(filter, orderBy, includeProperties, skip, take);
+            var _trips = await _repository.GetAsync<Trip>(filter, orderBy, includeProperties, skip, take);
+            if (!_trips.Any()) throw new InvalidOperationException(message: $"current user has no trips yet");
+            return _trips;
         }
 
         public Task<IEnumerable<Trip>> GetAllAsync(Func<IQueryable<Trip>, IOrderedQueryable<Trip>> orderBy = null, string includeProperties = null, int? skip = null, int? take = null)
@@ -52,9 +55,11 @@ namespace WorldTripLog.Web.Services
             return _repository.GetFirstAsync<Trip>(filter, orderBy, includeProperties);
         }
 
-        public Task<Trip> GetOneAsync(Expression<Func<Trip, bool>> filter = null, string includeProperties = null)
+        public async Task<Trip> GetOneAsync(Expression<Func<Trip, bool>> filter = null, string includeProperties = null)
         {
-            return _repository.GetOneAsync<Trip>(filter, includeProperties);
+            var _trip = await _repository.GetOneAsync<Trip>(filter, includeProperties);
+            if (_trip == null) throw new InvalidOperationException(message: $"trip with specified id does not exist or doesn't belong to current user");
+            return _trip;
         }
 
         #endregion end of getters

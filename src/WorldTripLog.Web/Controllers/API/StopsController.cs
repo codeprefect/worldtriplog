@@ -13,6 +13,7 @@ using WorldTripLog.Web.Models;
 using WorldTripLog.Web.Data;
 using WorldTripLog.Web.Models.ViewModels;
 using WorldTripLog.Web.Services;
+using WorldTripLog.Web.Services.Interfaces;
 
 namespace WorldTripLog.Web.Controllers.Api
 {
@@ -22,11 +23,11 @@ namespace WorldTripLog.Web.Controllers.Api
     {
         private readonly ILogger<StopsController> _logger;
 
-        private readonly IDataService<WorldTripDbContext, Stop> _stops;
+        private readonly IStopService _stops;
 
         private readonly GeoCoordsService _coordService;
 
-        public StopsController(ILogger<StopsController> logger, IDataService<WorldTripDbContext, Stop> stops, GeoCoordsService coordService)
+        public StopsController(ILogger<StopsController> logger, IStopService stops, GeoCoordsService coordService)
         {
             _logger = logger;
             _stops = stops;

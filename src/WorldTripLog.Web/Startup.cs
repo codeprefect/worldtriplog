@@ -20,6 +20,7 @@ using WorldTripLog.Web.Services;
 using WorldTripLog.Domain.Entities;
 using System.Net;
 using Newtonsoft.Json;
+using WorldTripLog.Web.Services.Interfaces;
 
 namespace WorldTripLog.Web
 {
@@ -90,8 +91,8 @@ namespace WorldTripLog.Web
             });
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped(typeof(IDataService<WorldTripDbContext, Trip>), typeof(TripService));
-            services.AddScoped(typeof(IDataService<WorldTripDbContext, Stop>), typeof(StopService));
+            services.AddScoped<IDataService<WorldTripDbContext, Trip>, TripService>();
+            services.AddScoped<IStopService, StopService>();
             services.AddTransient<GeoCoordsService>();
 
             services.AddMvc();

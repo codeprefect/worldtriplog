@@ -8,10 +8,11 @@ using WorldTripLog.Data.Interfaces;
 using WorldTripLog.Domain.Entities;
 using WorldTripLog.Domain.Interfaces;
 using WorldTripLog.Web.Data;
+using WorldTripLog.Web.Services.Interfaces;
 
 namespace WorldTripLog.Web.Services
 {
-    public class StopService : IDataService<WorldTripDbContext, Stop>
+    public class StopService : IStopService
     {
         private readonly IRepository<WorldTripDbContext> _repository;
 
