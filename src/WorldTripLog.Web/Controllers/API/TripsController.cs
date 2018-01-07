@@ -13,6 +13,7 @@ using WorldTripLog.Web.Models;
 using WorldTripLog.Web.Data;
 using WorldTripLog.Web.Models.ViewModels;
 using WorldTripLog.Web.Services;
+using WorldTripLog.Web.Services.Interfaces;
 
 namespace WorldTripLog.Web.Controllers.Api
 {
@@ -55,7 +56,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 Expression<Func<Trip, bool>> filter = t => t.CreatedBy == UserID;
                 var trips = await _trips.GetAsync(filter: filter);
-                return trips.Any() ? Ok(trips.Select(Mappings.ToTripVModel)) : throw new InvalidOperationException(message: $"current user {UserID} has no trips yet");
+                return Ok(trips.Select(Mappings.ToTripVModel));
             }
             catch (Exception e)
             {
@@ -85,7 +86,7 @@ namespace WorldTripLog.Web.Controllers.Api
             {
                 Expression<Func<Trip, bool>> filter = t => t.CreatedBy == UserID && t.Id == id;
                 var trip = await _trips.GetOneAsync(filter: filter);
-                return trip != null ? Ok(Mappings.ToTripVModel(trip)) : throw new InvalidOperationException(message: $"trip with id: {id} does not exist");
+                return Ok(Mappings.ToTripVModel(trip));
             }
             catch (Exception e)
             {
